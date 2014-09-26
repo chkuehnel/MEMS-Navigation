@@ -1,30 +1,33 @@
 package com.haw.navigation;
 
-import com.haw.navigation.USB.UsbController;
+import com.haw.navigation.Communication.SerialCommunicationManager;
+import gnu.io.*;
 
-import javax.usb.UsbDevice;
-import javax.usb.UsbException;
-import javax.usb.UsbHub;
-import java.io.UnsupportedEncodingException;
-import java.util.List;
+import java.util.Enumeration;
 
 public class Main {
-    // defines special USB device, here we need specific flyduino IDs
-    private static final Short vendorId = 0x090C;
-    private static final Short productId = 0x1000;
 
     public static void main(String[] args) {
-        // write your code here
-        System.out.println("Hello World!");
-        UsbController controller = new UsbController();
-        UsbHub rootHub = controller.getRootHub();
-        System.out.println("rootHub number of ports:" + rootHub.getNumberOfPorts());
+        System.out.println("Program started");
 
+        //System.out.println(java.library.path);
+        CommPortIdentifier serialPortId;
+        //static CommPortIdentifier sSerialPortId;
+        Enumeration enumComm;
+        //SerialPort serialPort;
 
-        UsbDevice device = controller.findDevice(rootHub, vendorId, productId);
+        enumComm = CommPortIdentifier.getPortIdentifiers();
+        while (enumComm.hasMoreElements()) {
+            serialPortId = (CommPortIdentifier) enumComm.nextElement();
+            if(serialPortId.getPortType() == CommPortIdentifier.PORT_SERIAL) {
+                System.out.println(serialPortId.getName());
+            }
+        }
 
-        List deviceList = rootHub.getAttachedUsbDevices();
-        System.out.println("deviceList, number ob devices: " + deviceList.size());
-        System.out.println("device: " + deviceList.get(0).toString());
+        SerialCommunicationManager runnable = new SerialCommunicationManager();
+        runnable.setOutPut(false);
+        new Thread(runnable).start();
+
+        System.out.println("Finished successfully");
     }
 }
