@@ -1,5 +1,6 @@
 package com.haw.navigation;
 
+import com.haw.navigation.Communication.SensorDataManager;
 import com.haw.navigation.Communication.SerialCommunicationManager;
 import gnu.io.*;
 
@@ -9,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Program started");
-
+        SensorDataManager dataManager = new SensorDataManager();
         //System.out.println(java.library.path);
         CommPortIdentifier serialPortId;
         //static CommPortIdentifier sSerialPortId;
@@ -24,9 +25,9 @@ public class Main {
             }
         }
 
-        SerialCommunicationManager runnable = new SerialCommunicationManager();
-        runnable.setOutPut(false);
+        SerialCommunicationManager runnable = new SerialCommunicationManager("COM3", dataManager, false);
         new Thread(runnable).start();
+        runnable.closePort();
 
         System.out.println("Finished successfully");
     }
