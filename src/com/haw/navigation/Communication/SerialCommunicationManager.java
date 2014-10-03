@@ -19,14 +19,23 @@ public class SerialCommunicationManager implements Runnable {
     OutputStream outputStream;
     InputStream inputStream;
     Boolean isPortOpen = false;
+    SensorDataManager dataManager;
+
+    int cnt = 0;
 
     int baudrate = 9600;
     int dataBits = SerialPort.DATABITS_8;
     int stopBits = SerialPort.STOPBITS_1;
     int parity = SerialPort.PARITY_NONE;
     String portName = "COM4";
-    int secondsRuntime = 20;
+    int secondsRuntime = 1;
     private boolean isOutPut = false;
+
+    public SerialCommunicationManager(String portName, SensorDataManager dataManager, boolean isOutPut) {
+        this.portName = portName;
+        this.dataManager = dataManager;
+        this.isOutPut = isOutPut;
+    }
 
     @Override
     public void run() {
@@ -47,7 +56,7 @@ public class SerialCommunicationManager implements Runnable {
         closePort();
     }
 
-    boolean openPort(String portName)
+    public boolean openPort(String portName)
     {
         Boolean foundPort = false;
         if (isPortOpen) {
@@ -100,7 +109,7 @@ public class SerialCommunicationManager implements Runnable {
         return true;
     }
 
-    void closePort()
+    public void closePort()
     {
         if (isPortOpen) {
             System.out.println("Close port");
@@ -111,7 +120,7 @@ public class SerialCommunicationManager implements Runnable {
         }
     }
 
-    void sendMessageToPort(String message)
+    public void sendMessageToPort(String message)
     {
         System.out.println("Send: " + message);
         if (!isPortOpen)
@@ -123,14 +132,18 @@ public class SerialCommunicationManager implements Runnable {
         }
     }
 
-    void portDataAvailable() {
+    public void portDataAvailable() {
         try {
             byte[] data = new byte[150];
             int num;
             while(inputStream.available() > 0) {
                 num = inputStream.read(data, 0, data.length);
-                System.out.println("Get: "+ new String(data, 0, num));
+                System.out.println(new String(data, 0, num));
+                String dataString = new String(data, 0 , num);
+                dataManager.setSensorData(dataString);
             }
+
+            System.out.println("cnt: " + cnt++ + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while reading message.");
         }
