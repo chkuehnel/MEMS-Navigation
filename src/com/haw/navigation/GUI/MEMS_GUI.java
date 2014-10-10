@@ -1,7 +1,9 @@
 package com.haw.navigation.GUI;
 
+import com.haw.navigation.Communication.SensorDataManager;
+import com.haw.navigation.Communication.SerialCommunicationManager;
+
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -10,6 +12,12 @@ import java.awt.event.ActionListener;
  */
 public class MEMS_GUI {
     private JPanel panel1;
+
+    // Menu
+    JRadioButtonMenuItem comPort3;
+    JRadioButtonMenuItem comPort4;
+    JRadioButtonMenuItem comPort9;
+
     private JTextField textField_Vx;
     private JTextField textField_Vy;
     private JTextField textField_Vz;
@@ -23,49 +31,100 @@ public class MEMS_GUI {
     private JButton startButton;
     private JButton pauseButton;
 
+   private String portName;
+
     private int z=1;
+    private boolean isRunning = false;
 
     public void init() {
+        JMenuBar bar = getJMenuBar();
         JFrame frame = new JFrame("MEMS_GUI");
         frame.setContentPane(new MEMS_GUI().panel1);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        addClickListener();
+        frame.setJMenuBar(bar);
+
         frame.pack();
+        frame.validate();
         frame.setVisible(true);
     }
 
-    public void MainGUI() {
+    private JMenuBar getJMenuBar() {
+        JMenuBar bar = new JMenuBar();
+        JMenu fileMenu = new JMenu("COM-Port");
+        bar.add(fileMenu);
+        comPort3 = new JRadioButtonMenuItem("COM3");
+        comPort4 = new JRadioButtonMenuItem("COM4");
+        comPort9 = new JRadioButtonMenuItem("COM9");
+        fileMenu.add(comPort3);
+        fileMenu.add(comPort4);
+        fileMenu.add(comPort9);
+        return bar;
+    }
 
+
+    private void addClickListener() {
+        comPort3.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                comPort4.setSelected(false);
+                comPort9.setSelected(false);
+                setPortName("COM3");
+            }
+        });
+        comPort4.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                comPort3.setSelected(false);
+                comPort9.setSelected(false);
+                setPortName("COM4");
+            }
+        });
+        comPort9.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                comPort3.setSelected(false);
+                comPort4.setSelected(false);
+                setPortName("COM9");
+            }
+        });
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                isRunning = true;
+                startCommunication();
+            }
 
-                {
-  /*                  textField_q1.setText(q1);           //Da sollen jew. die Werte aus dem Chip reingeschrieben werden als quatrenionen
-                    textField_q2.setText(q2);           //Erstmal nur so als Platzhalter reingeschrieben
-                    textField_q3.setText(q3);
-                    textField_q4.setText(q4);
+        });
 
-                    textField_Vx.setText(Vx);
-                    textField_Vy.setText(Vy);
-                    textField_Vz.setText(Vz);
-
-                    textField_Roll.setText(Roll);
-                    textField_Pitch.setText(Pitch);
-                    textField_Yaw.setText(Yaw);
-*/
-                    //Wenn Start gedrückt wird werden die Werte in einer Schleife in die Felder geschrieben
-                    //Wenn Pause gedrückt wird, wird die aktualisierung gestoppt indem aus der Schleife gesprungen wird
-                    //Werte können somit in Ruhe angesehen werden
-                    pauseButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            z=0;
-                        }
-                    });
-
-                }while (z==1);
+        pauseButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isRunning = false;
             }
         });
     }
 
+    private void startCommunication() {
+
+        SensorDataManager dataManager = new SensorDataManager();
+        SerialCommunicationManager runnable = new SerialCommunicationManager(getPortName(), dataManager, false);
+
+        while (isRunning){
+            new Thread(runnable).start();
+        }
+    }
+
+
+
+    public String getPortName() {
+        if (this.portName == null)
+            return portName = "";
+
+        return portName;
+    }
+
+    public void setPortName(String portName) {
+        this.portName = portName;
+    }
 }
