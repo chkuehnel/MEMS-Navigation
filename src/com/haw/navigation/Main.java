@@ -15,9 +15,8 @@ public class Main {
         gui.init();
 
         System.out.println("Program started");
-        SensorDataManager dataManager = new SensorDataManager();
         //System.out.println(java.library.path);
-        CommPortIdentifier serialPortId;
+  /*      CommPortIdentifier serialPortId;
         //static CommPortIdentifier sSerialPortId;
         Enumeration enumComm;
         //SerialPort serialPort;
@@ -29,9 +28,8 @@ public class Main {
                 System.out.println(serialPortId.getName());
             }
         }
+*/
 
-        SerialCommunicationManager runnable = new SerialCommunicationManager("COM4", dataManager, false);
-        new Thread(runnable).start();
 
         System.out.println("Finished successfully");
     }
