@@ -29,7 +29,8 @@ public class SerialCommunicationManager implements Runnable {
     int parity = SerialPort.PARITY_NONE;
     String portName = "COM4";
     int secondsRuntime = 1;
-    private boolean isOutPut = false;
+    private boolean isOutPut = false, shouldRun = true;
+    String dataString;
 
     public SerialCommunicationManager(String portName, SensorDataManager dataManager, boolean isOutPut) {
         this.portName = portName;
@@ -43,16 +44,18 @@ public class SerialCommunicationManager implements Runnable {
         if (!openPort(portName))
             return;
 
-        while (secondsRemaining > 0) {
+        while (shouldRun) {
             System.out.println("Seconds remaining: " + secondsRemaining.toString() );
             secondsRemaining--;
             try {
-                Thread.sleep(1000);
+                Thread.sleep(10);
             } catch(InterruptedException ignored) { }
             if (isOutPut) {
                 sendMessageToPort("TEST\n");
             }
         }
+        dataManager.setSensorData(dataString);
+        shouldRun = true;
         closePort();
     }
 
@@ -136,14 +139,16 @@ public class SerialCommunicationManager implements Runnable {
         try {
             byte[] data = new byte[150];
             int num;
+            dataString = "";
             while(inputStream.available() > 0) {
                 num = inputStream.read(data, 0, data.length);
-                System.out.println(new String(data, 0, num));
-                String dataString = new String(data, 0 , num);
-                dataManager.setSensorData(dataString);
+                dataString = (dataString + new String(data, 0 , num));
+                int number = countOccurrences(dataString, '\n');
+                if (number >= 2){
+                    shouldRun = false;
+                }
             }
 
-            System.out.println("cnt: " + cnt++ + "\n");
         } catch (IOException e) {
             System.out.println("An error occurred while reading message.");
         }
@@ -175,5 +180,18 @@ public class SerialCommunicationManager implements Runnable {
 
     public void setOutPut(boolean isOutPut) {
         this.isOutPut = isOutPut;
+    }
+
+    public static int countOccurrences(String haystack, char needle)
+    {
+        int count = 0;
+        for (int i=0; i < haystack.length(); i++)
+        {
+            if (haystack.charAt(i) == needle)
+            {
+                count++;
+            }
+        }
+        return count;
     }
 }
