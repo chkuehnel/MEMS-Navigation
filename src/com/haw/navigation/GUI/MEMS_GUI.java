@@ -33,7 +33,6 @@ public class MEMS_GUI {
 
    private String portName;
 
-    private int z=1;
     private boolean isRunning = false;
 
     public void init() {
