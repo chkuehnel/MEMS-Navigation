@@ -2,6 +2,7 @@ package com.haw.navigation;
 
 import com.haw.navigation.Communication.SensorDataManager;
 import com.haw.navigation.Communication.SerialCommunicationManager;
+import com.haw.navigation.GUI.MEMS_GUI;
 import gnu.io.*;
 
 import java.util.Enumeration;
@@ -9,6 +10,10 @@ import java.util.Enumeration;
 public class Main {
 
     public static void main(String[] args) {
+
+        MEMS_GUI gui = new MEMS_GUI();
+        gui.init();
+
         System.out.println("Program started");
         SensorDataManager dataManager = new SensorDataManager();
         //System.out.println(java.library.path);
@@ -25,9 +30,8 @@ public class Main {
             }
         }
 
-        SerialCommunicationManager runnable = new SerialCommunicationManager("COM3", dataManager, false);
+        SerialCommunicationManager runnable = new SerialCommunicationManager("COM4", dataManager, false);
         new Thread(runnable).start();
-        runnable.closePort();
 
         System.out.println("Finished successfully");
     }
