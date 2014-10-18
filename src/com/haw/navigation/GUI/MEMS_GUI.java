@@ -1,5 +1,6 @@
 package com.haw.navigation.GUI;
 
+import com.haw.navigation.Communication.CommunicationThread;
 import com.haw.navigation.Communication.SensorDataManager;
 import com.haw.navigation.Communication.SerialCommunicationManager;
 
@@ -10,7 +11,7 @@ import java.awt.event.ActionListener;
 /**
  * Created by Tower on 27.09.2014.
  */
-public class MEMS_GUI {
+public class MEMS_GUI extends JFrame{
     private JPanel panel1;
 
     // Menu
@@ -29,26 +30,28 @@ public class MEMS_GUI {
     private JTextField textField_q3;
     private JTextField textField_q4;
     private JButton startButton;
-    private JButton pauseButton;
-
-   private String portName;
+    private JLabel statusLabel;
+    private Boolean isPortSelected = false;
+    private String portName;
 
     private boolean isRunning = false;
+    private CommunicationThread thread;
 
-    public void init() {
+    public MEMS_GUI() {
+        JPanel panel = panel1;
+        setContentPane(panel);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
         JMenuBar bar = getJMenuBar();
-        JFrame frame = new JFrame("MEMS_GUI");
-        frame.setContentPane(new MEMS_GUI().panel1);
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         addClickListener();
-        frame.setJMenuBar(bar);
+        setJMenuBar(bar);
 
-        frame.pack();
-        frame.validate();
-        frame.setVisible(true);
+        pack();
+        validate();
+        setVisible(true);
     }
 
-    private JMenuBar getJMenuBar() {
+    public JMenuBar getJMenuBar() {
         JMenuBar bar = new JMenuBar();
         JMenu fileMenu = new JMenu("COM-Port");
         bar.add(fileMenu);
@@ -61,11 +64,11 @@ public class MEMS_GUI {
         return bar;
     }
 
-
     private void addClickListener() {
         comPort3.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                isPortSelected = true;
                 comPort4.setSelected(false);
                 comPort9.setSelected(false);
                 setPortName("COM3");
@@ -74,6 +77,7 @@ public class MEMS_GUI {
         comPort4.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                isPortSelected = true;
                 comPort3.setSelected(false);
                 comPort9.setSelected(false);
                 setPortName("COM4");
@@ -82,36 +86,46 @@ public class MEMS_GUI {
         comPort9.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                isPortSelected = true;
                 comPort3.setSelected(false);
                 comPort4.setSelected(false);
                 setPortName("COM9");
             }
         });
+
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                isRunning = true;
-                startCommunication();
+                if (isRunning){
+                    stopCommunication();
+                    statusLabel.setText("Communication stoped.");
+                    startButton.setText("Start");
+                    isRunning = false;
+                }else {
+                    if (isPortSelected) {
+                        isRunning = true;
+                        statusLabel.setText("Connected");
+                        startCommunication();
+                        isRunning = true;
+                        startButton.setText("Stop");
+                    } else {
+                        statusLabel.setText("Please select PORT!");
+                    }
+                }
             }
-
         });
 
-        pauseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isRunning = false;
-            }
-        });
+    }
+
+    private void stopCommunication() {
+        thread.setIsRunning(false);
     }
 
     private void startCommunication() {
-
-        SensorDataManager dataManager = new SensorDataManager();
-        SerialCommunicationManager runnable = new SerialCommunicationManager(getPortName(), dataManager, false);
-
-        while (isRunning){
-            new Thread(runnable).start();
-        }
+        thread = new CommunicationThread();
+        thread.setIsRunning(true);
+        thread.setPortName(portName);
+        thread.start();
     }
 
 
