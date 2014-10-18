@@ -1,12 +1,14 @@
 package com.haw.navigation.GUI;
 
-import com.haw.navigation.Communication.CommunicationThread;
 import com.haw.navigation.Communication.SensorDataManager;
 import com.haw.navigation.Communication.SerialCommunicationManager;
+import com.haw.navigation.Navigation.GyroData;
+import com.haw.navigation.Navigation.Quaternion;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 
 /**
  * Created by Tower on 27.09.2014.
@@ -19,23 +21,23 @@ public class MEMS_GUI extends JFrame{
     JRadioButtonMenuItem comPort4;
     JRadioButtonMenuItem comPort9;
 
-    private JTextField textField_Vx;
-    private JTextField textField_Vy;
-    private JTextField textField_Vz;
-    private JTextField textField_Roll;
-    private JTextField textField_Pitch;
-    private JTextField textField_Yaw;
-    private JTextField textField_q2;
-    private JTextField textField_q1;
-    private JTextField textField_q3;
-    private JTextField textField_q4;
     private JButton startButton;
     private JLabel statusLabel;
+    private JLabel rollLabel;
+    private JLabel pitchLabel;
+    private JLabel yawLabel;
+    private JLabel q1Label;
+    private JLabel q2Label;
+    private JLabel q3Label;
+    private JLabel q4Label;
     private Boolean isPortSelected = false;
     private String portName;
 
     private boolean isRunning = false;
-    private CommunicationThread thread;
+    private Thread thread;
+    private SerialCommunicationManager runnable;
+    private SensorDataManager dataManager;
+
 
     public MEMS_GUI() {
         JPanel panel = panel1;
@@ -118,14 +120,26 @@ public class MEMS_GUI extends JFrame{
     }
 
     private void stopCommunication() {
-        thread.setIsRunning(false);
+        runnable.setAlive(false);
     }
 
     private void startCommunication() {
-        thread = new CommunicationThread();
-        thread.setIsRunning(true);
-        thread.setPortName(portName);
+        runnable = new SerialCommunicationManager(getPortName(), dataManager, false);
+        thread = new Thread(runnable);
+        runnable.setAlive(true);
+        runnable.setPortName(portName);
         thread.start();
+        /* //Test code to measure communication cycles per second.
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        startButton.doClick();
+                    }
+                },
+                1000
+        );
+        */
     }
 
 
@@ -139,5 +153,23 @@ public class MEMS_GUI extends JFrame{
 
     public void setPortName(String portName) {
         this.portName = portName;
+    }
+
+    public void setDataManager(SensorDataManager dataManager) {
+        this.dataManager = dataManager;
+    }
+
+    public void updateLabel(GyroData gyroData, Quaternion quaternion) {
+        System.out.println("updateLabel called.");
+        DecimalFormat format = new DecimalFormat("#.####");
+        rollLabel.setText(format.format(gyroData.getxGyroData()));
+        pitchLabel.setText(format.format(gyroData.getyGyroData()));
+        yawLabel.setText(format.format(gyroData.getzGyroData()));
+
+        q1Label.setText(format.format(quaternion.getQ1()));
+        q2Label.setText(format.format(quaternion.getQ2()));
+        q3Label.setText(format.format(quaternion.getQ3()));
+        q4Label.setText(format.format(quaternion.getQ4()));
+
     }
 }
