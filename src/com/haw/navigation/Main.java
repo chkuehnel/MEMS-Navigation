@@ -3,18 +3,20 @@ package com.haw.navigation;
 import com.haw.navigation.Communication.SensorDataManager;
 import com.haw.navigation.Communication.SerialCommunicationManager;
 import com.haw.navigation.GUI.MEMS_GUI;
+import com.haw.navigation.Navigation.QuaternionClass;
 import gnu.io.*;
 
 import java.util.Enumeration;
 
-public class Main {
+public class Main{
+
 
     public static void main(String[] args) {
 
-        MEMS_GUI gui = new MEMS_GUI();
-        gui.init();
+        Organistor organistor = new Organistor();
 
         System.out.println("Program started");
+
         //System.out.println(java.library.path);
   /*      CommPortIdentifier serialPortId;
         //static CommPortIdentifier sSerialPortId;
