@@ -9,34 +9,29 @@ import java.util.ArrayList;
  */
 public class SensorDataManager {
 
-    private ArrayList<SensorDataSet> sensorDataSetList;
-    private String oldSensorData;
+    private static ArrayList<SensorDataSet> sensorDataSetList = new ArrayList<SensorDataSet>();
+    private static ArrayList<AngleData> angleDataList = new ArrayList<AngleData>();
 
-    public SensorDataManager() {
-        ArrayList sensorDataSetList = new ArrayList();
-        oldSensorData = "";
-    }
-
-    public void setSensorData(String sensorData){
-        if (sensorData == null){
+    public void setSensorData(String sensorData) {
+        if (sensorData == null) {
             return;
         }
-        String newSensorData[] = (oldSensorData + sensorData).split("\n");
+        String newSensorData[] = (sensorData).split("\n");
         for (String aNewSensorData : newSensorData) {
             String splicedSensorData[] = aNewSensorData.split(",");
-            if (splicedSensorData.length < 10) {
-                oldSensorData = oldSensorData +"," + aNewSensorData;
-            } else {
+            if (splicedSensorData.length == 10) {
+            //if (splicedSensorData.length == 9) {
                 SensorDataSet dataSet = parseDataFromStringArray(splicedSensorData);
-                if (dataSet != null){
+                if (dataSet != null) {
                     sensorDataSetList.add(dataSet);
-                    System.out.println("sensorDataSetList.size: " + sensorDataSetList.size());
+                    System.out.println(dataSet.getGyroData().getxGyroData() + " " + dataSet.getGyroData().getyGyroData()
+                    + " " + dataSet.getGyroData().getzGyroData());
                 }
             }
         }
     }
 
-    private SensorDataSet parseDataFromStringArray(String splicedSensorData[]){
+    private SensorDataSet parseDataFromStringArray(String splicedSensorData[]) {
         if (splicedSensorData != null) {
             for (String aSplicedSensorData : splicedSensorData) {
                 if (aSplicedSensorData == null) {
@@ -47,21 +42,37 @@ public class SensorDataManager {
             Float x = Float.parseFloat(splicedSensorData[0]);
             Float y = Float.parseFloat(splicedSensorData[1]);
             Float z = Float.parseFloat(splicedSensorData[2]);
-            AccData accData = new AccData(x, y, z);
-            x = Float.parseFloat(splicedSensorData[4]);
-            y = Float.parseFloat(splicedSensorData[5]);
-            z = Float.parseFloat(splicedSensorData[6]);
             GyroData gyroData = new GyroData(x, y, z);
-            x = Float.parseFloat(splicedSensorData[7]);
-            y = Float.parseFloat(splicedSensorData[8]);
-            z = Float.parseFloat(splicedSensorData[9]);
+            x = Float.parseFloat(splicedSensorData[3]);
+            y = Float.parseFloat(splicedSensorData[4]);
+            z = Float.parseFloat(splicedSensorData[5]);
+            AccData accData = new AccData(x, y, z);
+            x = Float.parseFloat(splicedSensorData[6]);
+            y = Float.parseFloat(splicedSensorData[7]);
+            z = Float.parseFloat(splicedSensorData[8]);
             MagData magData = new MagData(x, y, z);
-            TempData tempData = new TempData(Float.parseFloat(splicedSensorData[3]));
 
-            return new SensorDataSet(accData, gyroData, magData, tempData);
-        }
-        else return null;
+            return new SensorDataSet(accData, gyroData, magData);
+        } else return null;
     }
 
+    public ArrayList getSensorDataSetList() {
+
+        return new ArrayList();
+    }
+
+    public ArrayList<AngleData> getAngleDataList() {
+        return angleDataList;
+    }
+
+    public void setAngleDataList(ArrayList<AngleData> angleDataList) {
+        angleDataList = angleDataList;
+    }
+
+    public void addAngleDataToList(AngleData angleData) {
+        if (angleData != null) {
+            angleDataList.add(angleData);
+        }
+    }
 }
 
