@@ -34,7 +34,6 @@ public class MEMS_GUI extends JFrame{
     private String portName;
 
     private boolean isRunning = false;
-    private Thread thread;
     private SerialCommunicationManager runnable;
     private SensorDataManager dataManager;
 
@@ -125,7 +124,7 @@ public class MEMS_GUI extends JFrame{
 
     private void startCommunication() {
         runnable = new SerialCommunicationManager(getPortName(), dataManager, false);
-        thread = new Thread(runnable);
+        Thread thread = new Thread(runnable);
         runnable.setAlive(true);
         runnable.setPortName(portName);
         thread.start();

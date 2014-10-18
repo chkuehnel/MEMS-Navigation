@@ -1,7 +1,5 @@
 package com.haw.navigation.Navigation;
 
-import java.util.DoubleSummaryStatistics;
-
 /**
  * Created by chkue_000 on 17.10.2014.
  */
@@ -17,27 +15,10 @@ public class QuaternionClass {
 
     ResultAvailableListener listener;
 
-    public QuaternionClass(float roll_deg, float pitch_deg, float yaw_deg, float roll_rad, float pitch_rad, float yaw_rad) {
-        this.roll_deg = roll_deg;
-        this.pitch_deg = pitch_deg;
-        this.yaw_deg = yaw_deg;
-        this.roll_rad = roll_rad;
-        this.pitch_rad = pitch_rad;
-        this.yaw_rad = yaw_rad;
-    }
-
-    public QuaternionClass(float roll_deg, float pitch_deg, float yaw_deg) {
-        this.roll_deg = roll_deg;
-        this.pitch_deg = pitch_deg;
-        this.yaw_deg = yaw_deg;
-    }
-
     public QuaternionClass(ResultAvailableListener listener) {
         this.listener = listener;
         quaternion = new Quaternion();
     }
-
-
 
     public void fillDCM(GyroData gyroData) {
         convertToRad(gyroData);

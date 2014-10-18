@@ -21,14 +21,11 @@ public class SerialCommunicationManager implements Runnable {
     Boolean isPortOpen = false;
     SensorDataManager dataManager;
 
-    int cnt = 0;
-
     int baudrate = 9600;
     int dataBits = SerialPort.DATABITS_8;
     int stopBits = SerialPort.STOPBITS_1;
     int parity = SerialPort.PARITY_NONE;
     String portName = "COM4";
-    int secondsRuntime = 1;
     private boolean isOutPut = false, shouldRun = true;
     String dataString;
     private boolean isAlive;
@@ -46,7 +43,6 @@ public class SerialCommunicationManager implements Runnable {
     public void run() {
         int cnt = 0;
         while (isAlive) {
-            Integer secondsRemaining = secondsRuntime;
             shouldRun = true;
             if (!openPort(portName))
                 return;
@@ -185,14 +181,6 @@ public class SerialCommunicationManager implements Runnable {
         }
     }
 
-    public boolean isOutPut() {
-        return isOutPut;
-    }
-
-    public void setOutPut(boolean isOutPut) {
-        this.isOutPut = isOutPut;
-    }
-
     public static int countOccurrences(String haystack, char needle)
     {
         int count = 0;
@@ -206,16 +194,8 @@ public class SerialCommunicationManager implements Runnable {
         return count;
     }
 
-    public boolean isAlive() {
-        return isAlive;
-    }
-
     public void setAlive(boolean isAlive) {
         this.isAlive = isAlive;
-    }
-
-    public String getPortName() {
-        return portName;
     }
 
     public void setPortName(String portName) {

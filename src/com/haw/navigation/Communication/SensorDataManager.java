@@ -10,7 +10,6 @@ import java.util.ArrayList;
 public class SensorDataManager {
 
     private static ArrayList<SensorDataSet> sensorDataSetList = new ArrayList<SensorDataSet>();
-    private static ArrayList<AngleData> angleDataList = new ArrayList<AngleData>();
     private DataAvailableListener listener;
 
     public SensorDataManager(DataAvailableListener listener) {
@@ -65,20 +64,6 @@ public class SensorDataManager {
     public ArrayList getSensorDataSetList() {
 
         return sensorDataSetList;
-    }
-
-    public ArrayList<AngleData> getAngleDataList() {
-        return angleDataList;
-    }
-
-    public void setAngleDataList(ArrayList<AngleData> angleDataList) {
-        angleDataList = angleDataList;
-    }
-
-    public void addAngleDataToList(AngleData angleData) {
-        if (angleData != null) {
-            angleDataList.add(angleData);
-        }
     }
 
     public interface DataAvailableListener{
