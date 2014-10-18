@@ -31,6 +31,7 @@ public class SerialCommunicationManager implements Runnable {
     int secondsRuntime = 1;
     private boolean isOutPut = false, shouldRun = true;
     String dataString;
+    private boolean isAlive;
 
     public SerialCommunicationManager(String portName, SensorDataManager dataManager, boolean isOutPut) {
         this.portName = portName;
@@ -39,24 +40,28 @@ public class SerialCommunicationManager implements Runnable {
     }
 
     @Override
+    /**
+     * angleX, angleY, angleZ, accX, accY, accZ, magX, magY, magZ
+     */
     public void run() {
-        Integer secondsRemaining = secondsRuntime;
-        if (!openPort(portName))
-            return;
+        //while (isAlive) {
+            Integer secondsRemaining = secondsRuntime;
+            shouldRun = true;
+            if (!openPort(portName))
+                return;
 
-        while (shouldRun) {
-            System.out.println("Seconds remaining: " + secondsRemaining.toString() );
-            secondsRemaining--;
-            try {
-                Thread.sleep(10);
-            } catch(InterruptedException ignored) { }
-            if (isOutPut) {
-                sendMessageToPort("TEST\n");
+            while (shouldRun) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException ignored) {
+                }
+                if (isOutPut) {
+                    sendMessageToPort("TEST\n");
+                }
             }
-        }
-        dataManager.setSensorData(dataString);
-        shouldRun = true;
-        closePort();
+            //dataManager.setSensorData(dataString);
+            closePort();
+        //}
     }
 
     public boolean openPort(String portName)
@@ -140,7 +145,7 @@ public class SerialCommunicationManager implements Runnable {
             byte[] data = new byte[150];
             int num;
             dataString = "";
-            while(inputStream.available() > 0) {
+            while(shouldRun) {
                 num = inputStream.read(data, 0, data.length);
                 dataString = (dataString + new String(data, 0 , num));
                 int number = countOccurrences(dataString, '\n');
@@ -151,15 +156,19 @@ public class SerialCommunicationManager implements Runnable {
 
         } catch (IOException e) {
             System.out.println("An error occurred while reading message.");
+            closePort();
         }
     }
 
     class serialPortEventListener implements SerialPortEventListener {
         public void serialEvent(SerialPortEvent event) {
-            System.out.println("serialPortEventlistener");
             switch (event.getEventType()) {
                 case SerialPortEvent.DATA_AVAILABLE:
-                    portDataAvailable();
+                    if (shouldRun) {
+                        portDataAvailable();
+                        dataManager.setSensorData(dataString);
+                        //serialPort.removeEventListener();
+                    }
                     break;
                 case SerialPortEvent.BI:
                 case SerialPortEvent.CD:
@@ -193,5 +202,13 @@ public class SerialCommunicationManager implements Runnable {
             }
         }
         return count;
+    }
+
+    public boolean isAlive() {
+        return isAlive;
+    }
+
+    public void setAlive(boolean isAlive) {
+        this.isAlive = isAlive;
     }
 }
