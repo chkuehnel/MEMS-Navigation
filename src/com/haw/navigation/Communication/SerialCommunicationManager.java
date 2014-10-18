@@ -44,7 +44,8 @@ public class SerialCommunicationManager implements Runnable {
      * angleX, angleY, angleZ, accX, accY, accZ, magX, magY, magZ
      */
     public void run() {
-        //while (isAlive) {
+        int cnt = 0;
+        while (isAlive) {
             Integer secondsRemaining = secondsRuntime;
             shouldRun = true;
             if (!openPort(portName))
@@ -61,7 +62,8 @@ public class SerialCommunicationManager implements Runnable {
             }
             //dataManager.setSensorData(dataString);
             closePort();
-        //}
+            System.out.println("Count: " + cnt++);
+        }
     }
 
     public boolean openPort(String portName)
@@ -210,5 +212,13 @@ public class SerialCommunicationManager implements Runnable {
 
     public void setAlive(boolean isAlive) {
         this.isAlive = isAlive;
+    }
+
+    public String getPortName() {
+        return portName;
+    }
+
+    public void setPortName(String portName) {
+        this.portName = portName;
     }
 }
