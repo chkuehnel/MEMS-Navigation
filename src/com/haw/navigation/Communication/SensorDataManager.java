@@ -11,6 +11,11 @@ public class SensorDataManager {
 
     private static ArrayList<SensorDataSet> sensorDataSetList = new ArrayList<SensorDataSet>();
     private static ArrayList<AngleData> angleDataList = new ArrayList<AngleData>();
+    private DataAvailableListener listener;
+
+    public SensorDataManager(DataAvailableListener listener) {
+        this.listener = listener;
+    }
 
     public void setSensorData(String sensorData) {
         if (sensorData == null) {
@@ -29,6 +34,7 @@ public class SensorDataManager {
                 }
             }
         }
+        listener.newDataAvailable();
     }
 
     private SensorDataSet parseDataFromStringArray(String splicedSensorData[]) {
@@ -58,7 +64,7 @@ public class SensorDataManager {
 
     public ArrayList getSensorDataSetList() {
 
-        return new ArrayList();
+        return sensorDataSetList;
     }
 
     public ArrayList<AngleData> getAngleDataList() {
@@ -73,6 +79,14 @@ public class SensorDataManager {
         if (angleData != null) {
             angleDataList.add(angleData);
         }
+    }
+
+    public interface DataAvailableListener{
+        public void newDataAvailable();
+    }
+
+    public void setListener(DataAvailableListener listener) {
+        this.listener = listener;
     }
 }
 
