@@ -8,13 +8,11 @@ public class SensorDataSet {
     private AccData accData;
     private GyroData gyroData;
     private MagData magData;
-    private TempData tempData;
 
-    public SensorDataSet(AccData accData, GyroData gyroData, MagData magData, TempData tempData) {
+    public SensorDataSet(AccData accData, GyroData gyroData, MagData magData) {
         this.accData = accData;
         this.gyroData = gyroData;
         this.magData = magData;
-        this.tempData = tempData;
     }
 
     public SensorDataSet() {
@@ -42,13 +40,5 @@ public class SensorDataSet {
 
     public void setMagData(MagData magData) {
         this.magData = magData;
-    }
-
-    public TempData getTempData() {
-        return tempData;
-    }
-
-    public void setTempData(TempData tempData) {
-        this.tempData = tempData;
     }
 }
