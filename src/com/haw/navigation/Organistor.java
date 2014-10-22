@@ -21,8 +21,7 @@ public class Organistor implements SensorDataManager.DataAvailableListener,
         dataManager = new SensorDataManager(this);
         dataManager.setListener(this);
         quaternionComputer = new QuaternionClass(this);
-        gui = new MEMS_GUI();
-        gui.setDataManager(dataManager);
+        gui = new MEMS_GUI(dataManager);
     }
 
     @Override
