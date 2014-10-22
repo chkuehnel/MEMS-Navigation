@@ -9,18 +9,17 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 /**
  * Created by Tower on 27.09.2014.
  */
-public class MEMS_GUI extends JFrame{
-    private JPanel panel1;
-
+public class MEMS_GUI extends JFrame implements SerialCommunicationManager.UpdateGuiListener{
     // Menu
     JRadioButtonMenuItem comPort3;
     JRadioButtonMenuItem comPort4;
     JRadioButtonMenuItem comPort9;
-
+    private JPanel panel1;
     private JButton startButton;
     private JLabel statusLabel;
     private JLabel rollLabel;
@@ -30,6 +29,8 @@ public class MEMS_GUI extends JFrame{
     private JLabel q2Label;
     private JLabel q3Label;
     private JLabel q4Label;
+    private JLabel portStatusLabel;
+    private JLabel portInformationLabel;
     private Boolean isPortSelected = false;
     private String portName;
 
@@ -38,7 +39,8 @@ public class MEMS_GUI extends JFrame{
     private SensorDataManager dataManager;
 
 
-    public MEMS_GUI() {
+    public MEMS_GUI(SensorDataManager dataManager) {
+        this.dataManager = dataManager;
         JPanel panel = panel1;
         setContentPane(panel);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -47,9 +49,49 @@ public class MEMS_GUI extends JFrame{
         addClickListener();
         setJMenuBar(bar);
 
+        runnable = new SerialCommunicationManager(getPortName(), this.dataManager, false, this);
+        updateStatus();
+
         pack();
         validate();
         setVisible(true);
+    }
+
+    public void updateStatus() {
+
+        // portInformationLabel
+        ArrayList portList = runnable.getConnectedPorts();
+        String portInformation = "No Device detected";
+        if (portList.size() == 1) {
+            portName = portList.get(0).toString();
+            portInformation = "Device detected on " + portName;
+            portInformationLabel.setText(portInformation);
+            isPortSelected = true;
+        }else if (portList.size() > 1){
+            portInformation = "Device detected on " + portList.get(0);
+            portName = portList.get(0).toString();
+            isPortSelected = true;
+            for (int i = 1; i < portList.size(); i++){
+                portInformation = portInformation + "and " + portList.get(i);
+            }
+            portInformation = portInformation + ".\n Please select Port in Menu!";
+        }
+        portInformationLabel.setText(portInformation);
+
+        // portStatusLabel
+        String portStatus ="";
+        switch (runnable.getPortStatus()){
+            case SerialCommunicationManager.PORT_CONNECTED:
+                portStatus = "Connection established.";
+                break;
+            case SerialCommunicationManager.PORT_CLOSED:
+                portStatus = "Not connected.";
+                break;
+            case SerialCommunicationManager.PORT_ERROR:
+                portStatus = "ERROR!";
+                break;
+        }
+        portStatusLabel.setText(portStatus);
     }
 
     public JMenuBar getJMenuBar() {
@@ -97,25 +139,20 @@ public class MEMS_GUI extends JFrame{
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (isRunning){
+                if (isRunning) {
                     stopCommunication();
-                    statusLabel.setText("Communication stoped.");
                     startButton.setText("Start");
                     isRunning = false;
-                }else {
+                } else {
                     if (isPortSelected) {
                         isRunning = true;
-                        statusLabel.setText("Connected");
                         startCommunication();
                         isRunning = true;
                         startButton.setText("Stop");
-                    } else {
-                        statusLabel.setText("Please select PORT!");
                     }
                 }
             }
         });
-
     }
 
     private void stopCommunication() {
@@ -123,7 +160,6 @@ public class MEMS_GUI extends JFrame{
     }
 
     private void startCommunication() {
-        runnable = new SerialCommunicationManager(getPortName(), dataManager, false);
         Thread thread = new Thread(runnable);
         runnable.setAlive(true);
         runnable.setPortName(portName);
@@ -140,7 +176,6 @@ public class MEMS_GUI extends JFrame{
         );
         */
     }
-
 
 
     public String getPortName() {
@@ -169,6 +204,6 @@ public class MEMS_GUI extends JFrame{
         q2Label.setText(format.format(quaternion.getQ2()));
         q3Label.setText(format.format(quaternion.getQ3()));
         q4Label.setText(format.format(quaternion.getQ4()));
-
+        updateStatus();
     }
 }
