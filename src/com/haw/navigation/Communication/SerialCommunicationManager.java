@@ -5,6 +5,7 @@ import gnu.io.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.TooManyListenersException;
 
@@ -29,11 +30,22 @@ public class SerialCommunicationManager implements Runnable {
     private boolean isOutPut = false, shouldRun = true;
     String dataString;
     private boolean isAlive;
+    private int portStatus;
 
-    public SerialCommunicationManager(String portName, SensorDataManager dataManager, boolean isOutPut) {
+    public static final int PORT_CONNECTED = 1;
+    public static final int PORT_ERROR = 2;
+    public static final int PORT_CLOSED = 3;
+
+    UpdateGuiListener listener;
+
+    public SerialCommunicationManager(String portName,
+                                      SensorDataManager dataManager,
+                                      boolean isOutPut, UpdateGuiListener listener) {
         this.portName = portName;
         this.dataManager = dataManager;
         this.isOutPut = isOutPut;
+        this.listener = listener;
+        portStatus = PORT_CLOSED;
     }
 
     @Override
@@ -44,9 +56,10 @@ public class SerialCommunicationManager implements Runnable {
         int cnt = 0;
         while (isAlive) {
             shouldRun = true;
-            if (!openPort(portName))
+            if (!openPort(portName)) {
                 return;
-
+            }
+            portStatus = PORT_CONNECTED;
             while (shouldRun) {
                 try {
                     Thread.sleep(10);
@@ -60,6 +73,20 @@ public class SerialCommunicationManager implements Runnable {
             closePort();
             System.out.println("Count: " + cnt++);
         }
+        portStatus = PORT_CLOSED;
+        listener.updateStatus();
+    }
+
+    public ArrayList<String> getConnectedPorts(){
+        Boolean foundPort = false;
+        ArrayList<String> portList = new ArrayList<String>();
+        enumComm = CommPortIdentifier.getPortIdentifiers();
+        while(enumComm.hasMoreElements()) {
+            serialPortId = (CommPortIdentifier) enumComm.nextElement();
+            portList.add(serialPortId.getName());
+        }
+
+        return portList;
     }
 
     public boolean openPort(String portName)
@@ -67,6 +94,7 @@ public class SerialCommunicationManager implements Runnable {
         Boolean foundPort = false;
         if (isPortOpen) {
             System.out.println("Port is already open");
+            portStatus = PORT_ERROR;
             return false;
         }
         System.out.println("Open Port");
@@ -80,6 +108,7 @@ public class SerialCommunicationManager implements Runnable {
         }
         if (!foundPort) {
             System.out.println("Port could not be found: " + portName);
+            portStatus = PORT_ERROR;
             return false;
         }
         try {
@@ -200,5 +229,13 @@ public class SerialCommunicationManager implements Runnable {
 
     public void setPortName(String portName) {
         this.portName = portName;
+    }
+
+    public int getPortStatus() {
+        return portStatus;
+    }
+
+    public interface UpdateGuiListener{
+        public void updateStatus();
     }
 }
