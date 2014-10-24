@@ -22,7 +22,7 @@ public class SerialCommunicationManager implements Runnable {
     Boolean isPortOpen = false;
     SensorDataManager dataManager;
 
-    int baudrate = 9600;
+    int baudrate = 115200;
     int dataBits = SerialPort.DATABITS_8;
     int stopBits = SerialPort.STOPBITS_1;
     int parity = SerialPort.PARITY_NONE;
