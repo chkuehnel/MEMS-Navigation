@@ -32,6 +32,9 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
     private JLabel q4Label;
     private JLabel portStatusLabel;
     private JLabel portInformationLabel;
+    private JLabel vxLabel;
+    private JLabel vyLabel;
+    private JLabel vzLabel;
     private Boolean isPortSelected = false;
     private String portName;
 
