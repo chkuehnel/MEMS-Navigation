@@ -1,19 +1,11 @@
 package com.haw.navigation;
 
-import com.haw.navigation.Communication.SensorDataManager;
-import com.haw.navigation.Communication.SerialCommunicationManager;
-import com.haw.navigation.GUI.MEMS_GUI;
-import com.haw.navigation.Navigation.QuaternionClass;
-import gnu.io.*;
-
-import java.util.Enumeration;
-
 public class Main{
 
 
     public static void main(String[] args) {
 
-        Organistor organistor = new Organistor();
+        Organiser organiser = new Organiser();
 
         System.out.println("Program started");
 

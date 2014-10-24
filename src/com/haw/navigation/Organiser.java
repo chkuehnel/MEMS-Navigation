@@ -10,14 +10,14 @@ import java.util.ArrayList;
 /**
  * Created by chkue_000 on 18.10.2014.
  */
-public class Organistor implements SensorDataManager.DataAvailableListener,
+public class Organiser implements SensorDataManager.DataAvailableListener,
         QuaternionClass.ResultAvailableListener{
 
     static MEMS_GUI gui;
     static QuaternionClass quaternionComputer;
     static SensorDataManager dataManager;
 
-    public Organistor() {
+    public Organiser() {
         dataManager = new SensorDataManager(this);
         dataManager.setListener(this);
         quaternionComputer = new QuaternionClass(this);
