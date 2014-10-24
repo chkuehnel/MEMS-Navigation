@@ -40,7 +40,7 @@ public class Organistor implements SensorDataManager.DataAvailableListener,
         ArrayList sensorData = dataManager.getSensorDataSetList();
         SensorDataSet dataSet = (SensorDataSet) sensorData.get(sensorData.size() - 1);
         if (dataSet != null) {
-            gui.updateLabel(dataSet.getGyroData(), quaternionComputer.getQuaternion());
+            gui.updateLabel(quaternionComputer.getAngleData(), quaternionComputer.getQuaternion());
         }
     }
 }
