@@ -4,14 +4,12 @@ package com.haw.navigation.Navigation;
  * Created by chkue_000 on 17.10.2014.
  */
 public class QuaternionClass {
-    double roll_deg = 0;     //x
-    double pitch_deg = 6;    //y
-    double yaw_deg = 45;      //z
     double roll_rad;     //x
     double pitch_rad;    //y
     double yaw_rad;      //z
     double[][] DCM = new double[3][3];
     Quaternion quaternion;
+    FixedAngle angleData;
 
     ResultAvailableListener listener;
 
@@ -23,6 +21,7 @@ public class QuaternionClass {
     public void fillDCM(GyroData gyroData) {
         convertToRad(gyroData);
         computeQuaternion();
+        computeAngle(quaternion);
         computeDCM();
         listener.resultAvailable();
     }
@@ -39,6 +38,19 @@ public class QuaternionClass {
         Double q3 = (Math.cos(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.cos(roll_rad / 2) + Math.sin(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.sin(roll_rad / 2));
         Double q4 = (Math.sin(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.cos(roll_rad / 2) - Math.cos(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.sin(roll_rad / 2));
         quaternion.setAll(q1, q2, q3, q4);
+    }
+
+    private void computeAngle(Quaternion quaternion){
+        double q0 = quaternion.getQ1();
+        double q1 = quaternion.getQ2();
+        double q2 = quaternion.getQ3();
+        double q3 = quaternion.getQ4();
+
+        double phi = (Math.atan2((2*(q0*q1 + q2*q3)), (1 - 2*(q1*q1 + q2*q2) ))) *180/Math.PI;
+        double theta = Math.atan(2*(q0*q2 - q3*q1)) *180/Math.PI;
+        double psi = Math.atan2((2*(q0*q3 + q1*q2)),(1 - 2*(q2*q2 + q3*q3))) *180/Math.PI;
+
+        angleData = new FixedAngle(phi, theta, psi);
     }
 
 
@@ -67,6 +79,10 @@ public class QuaternionClass {
 
     public Quaternion getQuaternion() {
         return quaternion;
+    }
+
+    public FixedAngle getAngleData() {
+        return angleData;
     }
 }
 
