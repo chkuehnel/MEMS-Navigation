@@ -2,6 +2,7 @@ package com.haw.navigation.GUI;
 
 import com.haw.navigation.Communication.SensorDataManager;
 import com.haw.navigation.Communication.SerialCommunicationManager;
+import com.haw.navigation.Navigation.FixedAngle;
 import com.haw.navigation.Navigation.GyroData;
 import com.haw.navigation.Navigation.Quaternion;
 
@@ -199,6 +200,20 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         rollLabel.setText(format.format(gyroData.getxGyroData()));
         pitchLabel.setText(format.format(gyroData.getyGyroData()));
         yawLabel.setText(format.format(gyroData.getzGyroData()));
+
+        q1Label.setText(format.format(quaternion.getQ1()));
+        q2Label.setText(format.format(quaternion.getQ2()));
+        q3Label.setText(format.format(quaternion.getQ3()));
+        q4Label.setText(format.format(quaternion.getQ4()));
+        updateStatus();
+    }
+
+    public void updateLabel(FixedAngle angleData, Quaternion quaternion) {
+        System.out.println("updateLabel called.");
+        DecimalFormat format = new DecimalFormat("#.####");
+        rollLabel.setText(format.format(angleData.getPhi()));
+        pitchLabel.setText(format.format(angleData.getTheta()));
+        yawLabel.setText(format.format(angleData.getPsi()));
 
         q1Label.setText(format.format(quaternion.getQ1()));
         q2Label.setText(format.format(quaternion.getQ2()));
