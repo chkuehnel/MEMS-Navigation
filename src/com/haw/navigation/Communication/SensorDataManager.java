@@ -23,8 +23,8 @@ public class SensorDataManager {
         String newSensorData[] = (sensorData).split("\n");
         for (String aNewSensorData : newSensorData) {
             String splicedSensorData[] = aNewSensorData.split(",");
-            if (splicedSensorData.length == 10) {
-            //if (splicedSensorData.length == 9) {
+            //if (splicedSensorData.length == 10) {
+            if (splicedSensorData.length == 9) {
                 SensorDataSet dataSet = parseDataFromStringArray(splicedSensorData);
                 if (dataSet != null) {
                     sensorDataSetList.add(dataSet);
