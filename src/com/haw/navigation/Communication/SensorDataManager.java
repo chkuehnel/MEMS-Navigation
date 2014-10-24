@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class SensorDataManager {
 
-    private static ArrayList<SensorDataSet> sensorDataSetList = new ArrayList<SensorDataSet>();
     private DataAvailableListener listener;
+    SensorDataSet dataSet;
 
     public SensorDataManager(DataAvailableListener listener) {
         this.listener = listener;
@@ -25,11 +25,10 @@ public class SensorDataManager {
             String splicedSensorData[] = aNewSensorData.split(",");
             //if (splicedSensorData.length == 10) {
             if (splicedSensorData.length == 9) {
-                SensorDataSet dataSet = parseDataFromStringArray(splicedSensorData);
+                dataSet = parseDataFromStringArray(splicedSensorData);
                 if (dataSet != null) {
-                    sensorDataSetList.add(dataSet);
                     System.out.println(dataSet.getGyroData().getxGyroData() + " " + dataSet.getGyroData().getyGyroData()
-                    + " " + dataSet.getGyroData().getzGyroData());
+                            + " " + dataSet.getGyroData().getzGyroData());
                 }
             }
         }
@@ -61,17 +60,16 @@ public class SensorDataManager {
         } else return null;
     }
 
-    public ArrayList getSensorDataSetList() {
-
-        return sensorDataSetList;
-    }
-
     public interface DataAvailableListener{
         public void newDataAvailable();
     }
 
     public void setListener(DataAvailableListener listener) {
         this.listener = listener;
+    }
+
+    public SensorDataSet getDataSet() {
+        return dataSet;
     }
 }
 

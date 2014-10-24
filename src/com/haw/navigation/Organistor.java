@@ -27,8 +27,7 @@ public class Organistor implements SensorDataManager.DataAvailableListener,
     @Override
     public void newDataAvailable() {
         System.out.println("newDataAvailable called");
-        ArrayList sensorData = dataManager.getSensorDataSetList();
-        SensorDataSet dataSet = (SensorDataSet) sensorData.get(sensorData.size() - 1);
+        SensorDataSet dataSet = dataManager.getDataSet();
         if (dataSet != null){
             quaternionComputer.fillDCM(dataSet.getGyroData());
         }
@@ -37,8 +36,7 @@ public class Organistor implements SensorDataManager.DataAvailableListener,
     @Override
     public void resultAvailable() {
         System.out.println("resultAvailable called.");
-        ArrayList sensorData = dataManager.getSensorDataSetList();
-        SensorDataSet dataSet = (SensorDataSet) sensorData.get(sensorData.size() - 1);
+        SensorDataSet dataSet = dataManager.getDataSet();
         if (dataSet != null) {
             gui.updateLabel(quaternionComputer.getAngleData(), quaternionComputer.getQuaternion());
         }
