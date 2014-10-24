@@ -4,14 +4,14 @@ package com.haw.navigation.Navigation;
  * Created by chkue_000 on 17.10.2014.
  */
 public class QuaternionClass {
-    double roll_rad;     //x
-    double pitch_rad;    //y
-    double yaw_rad;      //z
-    double[][] DCM = new double[3][3];
-    Quaternion quaternion;
-    FixedAngle angleData;
+    private double roll_rad;     //x
+    private double pitch_rad;    //y
+    private double yaw_rad;      //z
+    private double[][] DCM = new double[3][3];
+    private Quaternion quaternion;
+    private FixedAngle angleData;
 
-    ResultAvailableListener listener;
+    private ResultAvailableListener listener;
 
     public QuaternionClass(ResultAvailableListener listener) {
         this.listener = listener;

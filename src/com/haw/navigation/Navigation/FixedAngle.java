@@ -4,9 +4,9 @@ package com.haw.navigation.Navigation;
  * Created by chkue_000 on 24.10.2014.
  */
 public class FixedAngle {
-    double phi;
-    double theta;
-    double psi;
+    private double phi;
+    private double theta;
+    private double psi;
 
     public FixedAngle(double phi, double theta, double psi) {
         this.phi = phi;

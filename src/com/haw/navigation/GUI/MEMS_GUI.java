@@ -17,9 +17,9 @@ import java.util.ArrayList;
  */
 public class MEMS_GUI extends JFrame implements SerialCommunicationManager.UpdateGuiListener{
     // Menu
-    JRadioButtonMenuItem comPort3;
-    JRadioButtonMenuItem comPort4;
-    JRadioButtonMenuItem comPort9;
+    private JRadioButtonMenuItem comPort3;
+    private JRadioButtonMenuItem comPort4;
+    private JRadioButtonMenuItem comPort9;
     private JPanel panel1;
     private JButton startButton;
     private JLabel statusLabel;
@@ -39,7 +39,7 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
     private String portName;
 
     private boolean isRunning = false;
-    private SerialCommunicationManager runnable;
+    private final SerialCommunicationManager runnable;
     private SensorDataManager dataManager;
 
 

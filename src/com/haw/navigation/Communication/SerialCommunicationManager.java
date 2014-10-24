@@ -14,21 +14,21 @@ import java.util.TooManyListenersException;
  */
 public class SerialCommunicationManager implements Runnable {
 
-    CommPortIdentifier serialPortId;
-    Enumeration enumComm;
-    SerialPort serialPort;
-    OutputStream outputStream;
-    InputStream inputStream;
-    Boolean isPortOpen = false;
-    SensorDataManager dataManager;
+    private CommPortIdentifier serialPortId;
+    private Enumeration enumComm;
+    private SerialPort serialPort;
+    private OutputStream outputStream;
+    private InputStream inputStream;
+    private Boolean isPortOpen = false;
+    private SensorDataManager dataManager;
 
-    int baudrate = 115200;
-    int dataBits = SerialPort.DATABITS_8;
-    int stopBits = SerialPort.STOPBITS_1;
-    int parity = SerialPort.PARITY_NONE;
-    String portName = "COM4";
+    private int baudrate = 115200;
+    private int dataBits = SerialPort.DATABITS_8;
+    private int stopBits = SerialPort.STOPBITS_1;
+    private int parity = SerialPort.PARITY_NONE;
+    private String portName = "COM4";
     private boolean isOutPut = false, shouldRun = true;
-    String dataString;
+    private String dataString;
     private boolean isAlive;
     private int portStatus;
 
@@ -36,7 +36,7 @@ public class SerialCommunicationManager implements Runnable {
     public static final int PORT_ERROR = 2;
     public static final int PORT_CLOSED = 3;
 
-    UpdateGuiListener listener;
+    private UpdateGuiListener listener;
 
     public SerialCommunicationManager(String portName,
                                       SensorDataManager dataManager,
@@ -78,7 +78,6 @@ public class SerialCommunicationManager implements Runnable {
     }
 
     public ArrayList<String> getConnectedPorts(){
-        Boolean foundPort = false;
         ArrayList<String> portList = new ArrayList<String>();
         enumComm = CommPortIdentifier.getPortIdentifiers();
         while(enumComm.hasMoreElements()) {
@@ -89,7 +88,7 @@ public class SerialCommunicationManager implements Runnable {
         return portList;
     }
 
-    public boolean openPort(String portName)
+    boolean openPort(String portName)
     {
         Boolean foundPort = false;
         if (isPortOpen) {
@@ -144,7 +143,7 @@ public class SerialCommunicationManager implements Runnable {
         return true;
     }
 
-    public void closePort()
+    void closePort()
     {
         if (isPortOpen) {
             System.out.println("Close port");
@@ -155,7 +154,7 @@ public class SerialCommunicationManager implements Runnable {
         }
     }
 
-    public void sendMessageToPort(String message)
+    void sendMessageToPort(String message)
     {
         System.out.println("Send: " + message);
         if (!isPortOpen)
@@ -167,7 +166,7 @@ public class SerialCommunicationManager implements Runnable {
         }
     }
 
-    public void portDataAvailable() {
+    void portDataAvailable() {
         try {
             byte[] data = new byte[150];
             int num;
@@ -187,7 +186,7 @@ public class SerialCommunicationManager implements Runnable {
         }
     }
 
-    class serialPortEventListener implements SerialPortEventListener {
+    private class serialPortEventListener implements SerialPortEventListener {
         public void serialEvent(SerialPortEvent event) {
             switch (event.getEventType()) {
                 case SerialPortEvent.DATA_AVAILABLE:
@@ -210,7 +209,7 @@ public class SerialCommunicationManager implements Runnable {
         }
     }
 
-    public static int countOccurrences(String haystack, char needle)
+    private static int countOccurrences(String haystack, char needle)
     {
         int count = 0;
         for (int i=0; i < haystack.length(); i++)

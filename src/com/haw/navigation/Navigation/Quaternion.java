@@ -1,15 +1,13 @@
 package com.haw.navigation.Navigation;
 
-import java.util.DoubleSummaryStatistics;
-
 /**
  * Created by chkue_000 on 18.10.2014.
  */
 public class Quaternion {
-    double q1;
-    double q2;
-    double q3;
-    double q4;
+    private double q1;
+    private double q2;
+    private double q3;
+    private double q4;
 
     public double getQ1() {
         return q1;

@@ -2,15 +2,13 @@ package com.haw.navigation.Communication;
 
 import com.haw.navigation.Navigation.*;
 
-import java.util.ArrayList;
-
 /**
  * Created by chkue_000 on 28.09.2014.
  */
 public class SensorDataManager {
 
     private DataAvailableListener listener;
-    SensorDataSet dataSet;
+    private SensorDataSet dataSet;
 
     public SensorDataManager(DataAvailableListener listener) {
         this.listener = listener;
