@@ -11,7 +11,6 @@ import java.util.Queue;
 public class SensorDataManager {
 
     private DataAvailableListener listener;
-    private SensorDataSet dataSet;
     private Queue<SensorDataSet> fifo;
 
     public SensorDataManager(DataAvailableListener listener) {
@@ -28,8 +27,9 @@ public class SensorDataManager {
             String splicedSensorData[] = aNewSensorData.split(",");
             //if (splicedSensorData.length == 10) {
             if (splicedSensorData.length == 9) {
-                dataSet = parseDataFromStringArray(splicedSensorData);
+                SensorDataSet dataSet = parseDataFromStringArray(splicedSensorData);
                 if (dataSet != null) {
+                    setSensorData(dataSet);
                     System.out.println(dataSet.getGyroData().getxGyroData() + " " + dataSet.getGyroData().getyGyroData()
                             + " " + dataSet.getGyroData().getzGyroData());
                 }
