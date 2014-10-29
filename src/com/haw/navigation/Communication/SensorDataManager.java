@@ -18,6 +18,7 @@ public class SensorDataManager {
         fifo = new LinkedList<SensorDataSet>();
     }
 
+    /* TODO: add Variable which safes partial sensor data*/
     public void setSensorData(String sensorData) {
         if (sensorData == null) {
             return;
