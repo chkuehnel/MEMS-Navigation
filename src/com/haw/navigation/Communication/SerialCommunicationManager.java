@@ -27,7 +27,7 @@ public class SerialCommunicationManager implements Runnable {
     private int stopBits = SerialPort.STOPBITS_1;
     private int parity = SerialPort.PARITY_NONE;
     private String portName = "COM4";
-    private boolean isOutPut = false, shouldRun = true;
+    private boolean isOutPut = false;
     private String dataString;
     private boolean isAlive;
     private int portStatus;
@@ -53,14 +53,11 @@ public class SerialCommunicationManager implements Runnable {
      * angleX, angleY, angleZ, accX, accY, accZ, magX, magY, magZ
      */
     public void run() {
-        int cnt = 0;
+        if (!openPort(portName)) {
+            return;
+        }
+        portStatus = PORT_CONNECTED;
         while (isAlive) {
-            shouldRun = true;
-            if (!openPort(portName)) {
-                return;
-            }
-            portStatus = PORT_CONNECTED;
-            while (shouldRun) {
                 try {
                     Thread.sleep(10);
                 } catch (InterruptedException ignored) {
@@ -68,11 +65,8 @@ public class SerialCommunicationManager implements Runnable {
                 if (isOutPut) {
                     sendMessageToPort("TEST\n");
                 }
-            }
-            //dataManager.setSensorData(dataString);
-            closePort();
-            System.out.println("Count: " + cnt++);
         }
+        closePort();
         portStatus = PORT_CLOSED;
         listener.updateStatus();
     }
@@ -171,30 +165,22 @@ public class SerialCommunicationManager implements Runnable {
             byte[] data = new byte[150];
             int num;
             dataString = "";
-            while(shouldRun) {
-                num = inputStream.read(data, 0, data.length);
-                dataString = (dataString + new String(data, 0 , num));
-                int number = countOccurrences(dataString, '\n');
-                if (number >= 2){
-                    shouldRun = false;
-                }
-            }
+
+            num = inputStream.read(data, 0, data.length);
+            dataString = (new String(data, 0 , num));
 
         } catch (IOException e) {
             System.out.println("An error occurred while reading message.");
             closePort();
         }
+        dataManager.setSensorData(dataString);
     }
 
     private class serialPortEventListener implements SerialPortEventListener {
         public void serialEvent(SerialPortEvent event) {
             switch (event.getEventType()) {
                 case SerialPortEvent.DATA_AVAILABLE:
-                    if (shouldRun) {
-                        portDataAvailable();
-                        dataManager.setSensorData(dataString);
-                        //serialPort.removeEventListener();
-                    }
+                    portDataAvailable();
                     break;
                 case SerialPortEvent.BI:
                 case SerialPortEvent.CD:
