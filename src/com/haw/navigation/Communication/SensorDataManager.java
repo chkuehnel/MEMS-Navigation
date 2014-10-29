@@ -71,8 +71,16 @@ public class SensorDataManager {
         this.listener = listener;
     }
 
-    public SensorDataSet getDataSet() {
-        return dataSet;
+    public void setSensorData(SensorDataSet data){
+        this.fifo.add(data);
+    }
+
+    public SensorDataSet getDataSet(){
+        return this.fifo.remove();
+    }
+
+    public boolean isFIFOEmpty(){
+        return this.fifo.isEmpty();
     }
 }
 
