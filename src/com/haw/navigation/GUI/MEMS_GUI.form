@@ -120,7 +120,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Vx"/>
+              <text value="Roll_device"/>
             </properties>
           </component>
           <component id="446ba" class="javax.swing.JLabel">
@@ -128,7 +128,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Vy"/>
+              <text value="Pitch_device"/>
             </properties>
           </component>
           <component id="933b4" class="javax.swing.JLabel">
@@ -136,7 +136,7 @@
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Vz"/>
+              <text value="Yaw_device"/>
             </properties>
           </component>
           <component id="1bcee" class="javax.swing.JLabel" binding="vxLabel">
@@ -189,7 +189,7 @@
               <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="q1"/>
+              <text value="q0"/>
             </properties>
           </component>
           <component id="4ca23" class="javax.swing.JLabel">
@@ -197,7 +197,7 @@
               <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="q2"/>
+              <text value="q1"/>
             </properties>
           </component>
           <component id="d63df" class="javax.swing.JLabel">
@@ -205,7 +205,7 @@
               <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="q3"/>
+              <text value="q2"/>
             </properties>
           </component>
           <component id="631d6" class="javax.swing.JLabel">
@@ -213,7 +213,7 @@
               <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="q4"/>
+              <text value="q3"/>
             </properties>
           </component>
           <component id="588fa" class="javax.swing.JLabel" binding="q1Label">
