@@ -224,4 +224,22 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         q4Label.setText(format.format(quaternion.getQ4()));
         updateStatus();
     }
+
+    public void updateLabel(GyroData gyroData, FixedAngle angleData, Quaternion quaternion) {
+        System.out.println("updateLabel called.");
+        DecimalFormat format = new DecimalFormat("#.####");
+        rollLabel.setText(format.format(angleData.getPhi()));
+        pitchLabel.setText(format.format(angleData.getTheta()));
+        yawLabel.setText(format.format(angleData.getPsi()));
+
+        q1Label.setText(format.format(quaternion.getQ1()));
+        q2Label.setText(format.format(quaternion.getQ2()));
+        q3Label.setText(format.format(quaternion.getQ3()));
+        q4Label.setText(format.format(quaternion.getQ4()));
+
+        vxLabel.setText(format.format(gyroData.getxGyroData()));
+        vyLabel.setText(format.format(gyroData.getyGyroData()));
+        vzLabel.setText(format.format(gyroData.getzGyroData()));
+        updateStatus();
+    }
 }

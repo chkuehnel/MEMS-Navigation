@@ -36,7 +36,9 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
         System.out.println("resultAvailable called.");
         SensorDataSet dataSet = dataManager.getDataSet();
         if (dataSet != null) {
-            gui.updateLabel(quaternionComputer.getAngleData(), quaternionComputer.getQuaternion());
+            //
+            gui.updateLabel(dataSet.getGyroData(), quaternionComputer.getAngleData(),quaternionComputer.getQuaternion());
+            //gui.updateLabel(quaternionComputer.getAngleData(), quaternionComputer.getQuaternion());
         }
     }
 }
