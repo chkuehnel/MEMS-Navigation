@@ -12,27 +12,34 @@ public class SensorDataManager {
 
     private DataAvailableListener listener;
     private Queue<SensorDataSet> fifo;
+    private String partialData;
+    private int cnt = 0;
+    private int frequencyCounter;
 
     public SensorDataManager(DataAvailableListener listener) {
         this.listener = listener;
         fifo = new LinkedList<SensorDataSet>();
+        frequencyCounter = 0;
     }
 
-    /* TODO: add Variable which safes partial sensor data*/
     public void setSensorData(String sensorData) {
         if (sensorData == null) {
             return;
         }
-        String newSensorData[] = (sensorData).split("\n");
+        String newSensorData[] = (partialData + sensorData).split("\n");
         for (String aNewSensorData : newSensorData) {
             String splicedSensorData[] = aNewSensorData.split(",");
             //if (splicedSensorData.length == 10) {
+            if (splicedSensorData.length < 9) {
+                partialData = aNewSensorData;
+            }
             if (splicedSensorData.length == 9) {
                 SensorDataSet dataSet = parseDataFromStringArray(splicedSensorData);
                 if (dataSet != null) {
                     setSensorData(dataSet);
                     System.out.println(dataSet.getGyroData().getxGyroData() + " " + dataSet.getGyroData().getyGyroData()
                             + " " + dataSet.getGyroData().getzGyroData());
+                    System.out.println("Counter: " + cnt);
                 }
             }
         }
@@ -73,15 +80,26 @@ public class SensorDataManager {
     }
 
     public void setSensorData(SensorDataSet data){
+        cnt++;
+        frequencyCounter++;
         this.fifo.add(data);
     }
 
     public SensorDataSet getDataSet(){
+        cnt--;
         return this.fifo.remove();
     }
 
     public boolean isFIFOEmpty(){
         return this.fifo.isEmpty();
+    }
+
+    public void resetFrequencyCounter() {
+        frequencyCounter = 0;
+    }
+
+    public int getFrequencyCounter() {
+        return frequencyCounter;
     }
 }
 
