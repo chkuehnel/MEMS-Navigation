@@ -204,10 +204,10 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         pitchLabel.setText(format.format(gyroData.getyGyroData()));
         yawLabel.setText(format.format(gyroData.getzGyroData()));
 
-        q1Label.setText(format.format(quaternion.getQ1()));
-        q2Label.setText(format.format(quaternion.getQ2()));
-        q3Label.setText(format.format(quaternion.getQ3()));
-        q4Label.setText(format.format(quaternion.getQ4()));
+        q1Label.setText(format.format(quaternion.getQ0()));
+        q2Label.setText(format.format(quaternion.getQ1()));
+        q3Label.setText(format.format(quaternion.getQ2()));
+        q4Label.setText(format.format(quaternion.getQ3()));
         updateStatus();
     }
 
@@ -218,10 +218,10 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         pitchLabel.setText(format.format(angleData.getTheta()));
         yawLabel.setText(format.format(angleData.getPsi()));
 
-        q1Label.setText(format.format(quaternion.getQ1()));
-        q2Label.setText(format.format(quaternion.getQ2()));
-        q3Label.setText(format.format(quaternion.getQ3()));
-        q4Label.setText(format.format(quaternion.getQ4()));
+        q1Label.setText(format.format(quaternion.getQ0()));
+        q2Label.setText(format.format(quaternion.getQ1()));
+        q3Label.setText(format.format(quaternion.getQ2()));
+        q4Label.setText(format.format(quaternion.getQ3()));
         updateStatus();
     }
 
@@ -232,10 +232,10 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         pitchLabel.setText(format.format(angleData.getTheta()));
         yawLabel.setText(format.format(angleData.getPsi()));
 
-        q1Label.setText(format.format(quaternion.getQ1()));
-        q2Label.setText(format.format(quaternion.getQ2()));
-        q3Label.setText(format.format(quaternion.getQ3()));
-        q4Label.setText(format.format(quaternion.getQ4()));
+        q1Label.setText(format.format(quaternion.getQ0()));
+        q2Label.setText(format.format(quaternion.getQ1()));
+        q3Label.setText(format.format(quaternion.getQ2()));
+        q4Label.setText(format.format(quaternion.getQ3()));
 
         vxLabel.setText(format.format(gyroData.getxGyroData()));
         vyLabel.setText(format.format(gyroData.getyGyroData()));
