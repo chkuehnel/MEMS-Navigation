@@ -46,10 +46,14 @@ public class QuaternionClass {
         double q2 = quaternion.getQ3();
         double q3 = quaternion.getQ4();
 
+        double phi = - Math.atan((2*(q2*q3 + q0*q1))/(-q0*q0 + q1*q1 + q2*q2 - q3*q3))*180/Math.PI;
+        double theta = Math.asin(2*(q0*q2 - q1*q3))*180/Math.PI;
+        double psi = Math.atan((2*(q1*q2 + q0*q3))/(q0*q0 + q1*q1 - q2*q2 - q3*q3))*180/Math.PI;
+        /*
         double phi = (Math.atan2((2*(q0*q1 + q2*q3)), (1 - 2*(q1*q1 + q2*q2) ))) *180/Math.PI;
-        double theta = Math.atan(2*(q0*q2 - q3*q1)) *180/Math.PI;
+        double theta = (Math.atan(2*(q0*q2 - q3*q1)) *180/Math.PI);
         double psi = Math.atan2((2*(q0*q3 + q1*q2)),(1 - 2*(q2*q2 + q3*q3))) *180/Math.PI;
-
+        */
         angleData = new FixedAngle(phi, theta, psi);
     }
 
