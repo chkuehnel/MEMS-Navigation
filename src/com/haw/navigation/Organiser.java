@@ -14,6 +14,7 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
     private static MEMS_GUI gui;
     private static QuaternionClass quaternionComputer;
     private static SensorDataManager dataManager;
+    private SensorDataSet dataSet;
 
     public Organiser() {
         dataManager = new SensorDataManager(this);
@@ -25,16 +26,17 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
     @Override
     public void newDataAvailable() {
         System.out.println("newDataAvailable called");
-        SensorDataSet dataSet = dataManager.getDataSet();
-        if (dataSet != null){
-            quaternionComputer.fillDCM(dataSet.getGyroData());
+        if (!dataManager.isFIFOEmpty()) {
+            dataSet = dataManager.getDataSet();
+            if (dataSet != null) {
+                quaternionComputer.fillDCM(dataSet.getGyroData());
+            }
         }
     }
 
     @Override
     public void resultAvailable() {
         System.out.println("resultAvailable called.");
-        SensorDataSet dataSet = dataManager.getDataSet();
         if (dataSet != null) {
             gui.updateLabel(quaternionComputer.getAngleData(), quaternionComputer.getQuaternion());
         }
