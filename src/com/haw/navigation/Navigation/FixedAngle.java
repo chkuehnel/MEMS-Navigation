@@ -2,6 +2,7 @@ package com.haw.navigation.Navigation;
 
 /**
  * Created by chkue_000 on 24.10.2014.
+ * Fixed angle data class, computed from quaternions
  */
 public class FixedAngle {
     private double phi;

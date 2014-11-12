@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Tower on 27.09.2014.
+ * This class handles all GUI elements and starts serial communication thread
  */
 public class MEMS_GUI extends JFrame implements SerialCommunicationManager.UpdateGuiListener{
     // Menu
@@ -35,7 +36,7 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
     private JLabel vxLabel;
     private JLabel vyLabel;
     private JLabel vzLabel;
-    private Boolean isPortSelected = false;
+    private Boolean isPortSelected = true;
     private String portName;
 
     private boolean isRunning = false;

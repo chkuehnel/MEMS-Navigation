@@ -41,7 +41,7 @@ public class SerialCommunicationManager implements Runnable {
     public SerialCommunicationManager(String portName,
                                       SensorDataManager dataManager,
                                       boolean isOutPut, UpdateGuiListener listener) {
-        this.portName = portName;
+        this.portName = "/dev/ttyS3";
         this.dataManager = dataManager;
         this.isOutPut = isOutPut;
         this.listener = listener;
@@ -53,6 +53,8 @@ public class SerialCommunicationManager implements Runnable {
      * angleX, angleY, angleZ, accX, accY, accZ, magX, magY, magZ
      */
     public void run() {
+        // TODO: find correct port
+        portName = "/dev/ttyACM0";
         if (!openPort(portName)) {
             return;
         }
@@ -118,12 +120,12 @@ public class SerialCommunicationManager implements Runnable {
 		try {
 			inputStream = serialPort.getInputStream();
 		} catch (IOException e) {
-			System.out.println("Keinen Zugriff auf InputStream");
+			System.out.println("No access to input stream.");
 		}
 		try {
 			serialPort.addEventListener(new serialPortEventListener());
 		} catch (TooManyListenersException e) {
-			System.out.println("TooManyListenersException für Serialport");
+			System.out.println("TooManyListenersException for serial port");
 		}
 		serialPort.notifyOnDataAvailable(true);
 
@@ -193,19 +195,6 @@ public class SerialCommunicationManager implements Runnable {
                 default:
             }
         }
-    }
-
-    private static int countOccurrences(String haystack, char needle)
-    {
-        int count = 0;
-        for (int i=0; i < haystack.length(); i++)
-        {
-            if (haystack.charAt(i) == needle)
-            {
-                count++;
-            }
-        }
-        return count;
     }
 
     public void setAlive(boolean isAlive) {
