@@ -17,6 +17,21 @@ public class ECompass {
         this.calls = 0;
     }
 
+    public long getCalls() {
+        return calls;
+    }
+
+    public void setCompass(MagData m, GyroData g) {
+        mx = m.getxMagData(); // get raw data
+        my = m.getyMagData();
+        mz = m.getzMagData();
+        angleX = g.getxGyroData();
+        angleY = g.getyGyroData();
+        angleZ = g.getzGyroData();
+
+        this.compass = calculate(); // calculate heading
+    }
+
     /**
      * Calculate heading from magnetometer and accelerometer data with low pass filter.
      * @param m
