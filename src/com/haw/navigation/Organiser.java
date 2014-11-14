@@ -2,6 +2,7 @@ package com.haw.navigation;
 
 import com.haw.navigation.Communication.SensorDataManager;
 import com.haw.navigation.GUI.MEMS_GUI;
+import com.haw.navigation.Navigation.ECompass;
 import com.haw.navigation.Navigation.QuaternionClass;
 import com.haw.navigation.Navigation.SensorDataSet;
 import com.haw.navigation.Navigation.SpeedWayClass;
@@ -12,6 +13,7 @@ import com.haw.navigation.Navigation.SpeedWayClass;
 public class Organiser implements SensorDataManager.DataAvailableListener,
         SpeedWayClass.ResultAvailableListener{
 
+    private static ECompass eCompass;
     private static MEMS_GUI gui;
     private static QuaternionClass quaternionComputer;
     private static SpeedWayClass wayComputer;
@@ -23,6 +25,7 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
         dataManager.setListener(this);
         quaternionComputer = new QuaternionClass();
         wayComputer = new SpeedWayClass(this);
+        eCompass = new ECompass();
         gui = new MEMS_GUI(dataManager);
     }
 
@@ -32,6 +35,12 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
         if (!dataManager.isFIFOEmpty()) {
             dataSet = dataManager.getDataSet();
             if (dataSet != null) {
+
+                if (eCompass.getCalls() == 0 ) // Initialize eCompass in the beginning
+                    eCompass.setCompass(dataSet.getMagData(), dataSet.getGyroData());
+                if (eCompass.getCalls() < 2000 ) // update eCompass in the first readings
+                    eCompass.updateCompass(dataSet.getMagData(), dataSet.getGyroData());
+
                 quaternionComputer.fillDCM(dataSet.getGyroData());
                 wayComputer.computeWay(dataSet.getAccData(), quaternionComputer.getAngleData());
             }
