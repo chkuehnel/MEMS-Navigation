@@ -5,6 +5,7 @@ import com.haw.navigation.Communication.SerialCommunicationManager;
 import com.haw.navigation.Navigation.FixedAngle;
 import com.haw.navigation.Navigation.GyroData;
 import com.haw.navigation.Navigation.Quaternion;
+import com.haw.navigation.Navigation.SpeedWayData;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -35,6 +36,9 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
     private JLabel vxLabel;
     private JLabel vyLabel;
     private JLabel vzLabel;
+    private JLabel wayXLabel;
+    private JLabel wayYLabel;
+    private JLabel wayZLabel;
     private Boolean isPortSelected = false;
     private String portName;
 
@@ -204,10 +208,10 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         pitchLabel.setText(format.format(gyroData.getyGyroData()));
         yawLabel.setText(format.format(gyroData.getzGyroData()));
 
-        q1Label.setText(format.format(quaternion.getQ1()));
-        q2Label.setText(format.format(quaternion.getQ2()));
-        q3Label.setText(format.format(quaternion.getQ3()));
-        q4Label.setText(format.format(quaternion.getQ4()));
+        q1Label.setText(format.format(quaternion.getQ0()));
+        q2Label.setText(format.format(quaternion.getQ1()));
+        q3Label.setText(format.format(quaternion.getQ2()));
+        q4Label.setText(format.format(quaternion.getQ3()));
         updateStatus();
     }
 
@@ -218,10 +222,32 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         pitchLabel.setText(format.format(angleData.getTheta()));
         yawLabel.setText(format.format(angleData.getPsi()));
 
-        q1Label.setText(format.format(quaternion.getQ1()));
-        q2Label.setText(format.format(quaternion.getQ2()));
-        q3Label.setText(format.format(quaternion.getQ3()));
-        q4Label.setText(format.format(quaternion.getQ4()));
+        q1Label.setText(format.format(quaternion.getQ0()));
+        q2Label.setText(format.format(quaternion.getQ1()));
+        q3Label.setText(format.format(quaternion.getQ2()));
+        q4Label.setText(format.format(quaternion.getQ3()));
+        updateStatus();
+    }
+
+    public void updateLabel(FixedAngle angleData, Quaternion quaternion, SpeedWayData speedWayData) {
+        System.out.println("updateLabel called.");
+        DecimalFormat format = new DecimalFormat("#.####");
+        rollLabel.setText(format.format(angleData.getPhi()));
+        pitchLabel.setText(format.format(angleData.getTheta()));
+        yawLabel.setText(format.format(angleData.getPsi()));
+
+        q1Label.setText(format.format(quaternion.getQ0()));
+        q2Label.setText(format.format(quaternion.getQ1()));
+        q3Label.setText(format.format(quaternion.getQ2()));
+        q4Label.setText(format.format(quaternion.getQ3()));
+
+        vxLabel.setText(format.format(speedWayData.getSpeedX()));
+        vyLabel.setText(format.format(speedWayData.getSpeedY()));
+        vzLabel.setText(format.format(speedWayData.getSpeedZ()));
+
+        wayXLabel.setText(format.format(speedWayData.getWayX()));
+        wayYLabel.setText(format.format(speedWayData.getWayY()));
+        wayZLabel.setText(format.format(speedWayData.getWayZ()));
         updateStatus();
     }
 }
