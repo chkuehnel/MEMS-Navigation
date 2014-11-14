@@ -11,10 +11,7 @@ public class QuaternionClass {
     private Quaternion quaternion;
     private FixedAngle angleData;
 
-    private ResultAvailableListener listener;
-
-    public QuaternionClass(ResultAvailableListener listener) {
-        this.listener = listener;
+    public QuaternionClass() {
         quaternion = new Quaternion();
     }
 
@@ -23,7 +20,7 @@ public class QuaternionClass {
         computeQuaternion();
         computeAngle(quaternion);
         computeDCM();
-        listener.resultAvailable();
+        System.out.println("fillDcm");
     }
 
     private void convertToRad(GyroData gyroData) {
@@ -33,18 +30,18 @@ public class QuaternionClass {
     }
 
     private void computeQuaternion() {
-        Double q1 = (Math.cos(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.cos(roll_rad / 2) + Math.sin(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.sin(roll_rad / 2));
-        Double q2 = (Math.cos(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.sin(roll_rad / 2) - Math.sin(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.cos(roll_rad / 2));
-        Double q3 = (Math.cos(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.cos(roll_rad / 2) + Math.sin(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.sin(roll_rad / 2));
-        Double q4 = (Math.sin(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.cos(roll_rad / 2) - Math.cos(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.sin(roll_rad / 2));
-        quaternion.setAll(q1, q2, q3, q4);
+        Double q0 = (Math.cos(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.cos(roll_rad / 2) + Math.sin(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.sin(roll_rad / 2));
+        Double q1 = (Math.cos(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.sin(roll_rad / 2) - Math.sin(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.cos(roll_rad / 2));
+        Double q2 = (Math.cos(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.cos(roll_rad / 2) + Math.sin(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.sin(roll_rad / 2));
+        Double q3 = (Math.sin(yaw_rad / 2) * Math.cos(pitch_rad / 2) * Math.cos(roll_rad / 2) - Math.cos(yaw_rad / 2) * Math.sin(pitch_rad / 2) * Math.sin(roll_rad / 2));
+        quaternion.setAll(q0, q1, q2, q3);
     }
 
     private void computeAngle(Quaternion quaternion){
-        double q0 = quaternion.getQ1();
-        double q1 = quaternion.getQ2();
-        double q2 = quaternion.getQ3();
-        double q3 = quaternion.getQ4();
+        double q0 = quaternion.getQ0();
+        double q1 = quaternion.getQ1();
+        double q2 = quaternion.getQ2();
+        double q3 = quaternion.getQ3();
 
         double phi = (Math.atan2((2*(q0*q1 + q2*q3)), (1 - 2*(q1*q1 + q2*q2) ))) *180/Math.PI;
         double theta = Math.atan(2*(q0*q2 - q3*q1)) *180/Math.PI;
@@ -55,10 +52,10 @@ public class QuaternionClass {
 
 
     private void computeDCM() {
-        double q1 = quaternion.getQ1();
-        double q2 = quaternion.getQ2();
-        double q3 = quaternion.getQ3();
-        double q4 = quaternion.getQ4();
+        double q1 = quaternion.getQ0();
+        double q2 = quaternion.getQ1();
+        double q3 = quaternion.getQ2();
+        double q4 = quaternion.getQ3();
 
         DCM[0][0] = ((q1 * q1) - (q2 * q2) - (q3 * q3) + (q4 * q4));
         DCM[0][1] = (2 * ((q1 * q2) + (q3 * q4)));
@@ -73,9 +70,7 @@ public class QuaternionClass {
         DCM[2][2] = (-(q1 * q1) - (q2 * q2) + (q3 * q3) + (q4 * q4));
     }
 
-    public interface ResultAvailableListener{
-        public void resultAvailable();
-    }
+
 
     public Quaternion getQuaternion() {
         return quaternion;
