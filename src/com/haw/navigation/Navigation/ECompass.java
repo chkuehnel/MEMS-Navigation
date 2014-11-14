@@ -21,6 +21,10 @@ public class ECompass {
         return calls;
     }
 
+    public double getCompass() {
+        return compass;
+    }
+
     public void setCompass(MagData m, GyroData g) {
         mx = m.getxMagData(); // get raw data
         my = m.getyMagData();

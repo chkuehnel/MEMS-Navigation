@@ -2,10 +2,7 @@ package com.haw.navigation.GUI;
 
 import com.haw.navigation.Communication.SensorDataManager;
 import com.haw.navigation.Communication.SerialCommunicationManager;
-import com.haw.navigation.Navigation.FixedAngle;
-import com.haw.navigation.Navigation.GyroData;
-import com.haw.navigation.Navigation.Quaternion;
-import com.haw.navigation.Navigation.SpeedWayData;
+import com.haw.navigation.Navigation.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -39,6 +36,7 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
     private JLabel wayXLabel;
     private JLabel wayYLabel;
     private JLabel wayZLabel;
+    private JLabel compass;
     private Boolean isPortSelected = false;
     private String portName;
 
@@ -229,7 +227,7 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         updateStatus();
     }
 
-    public void updateLabel(FixedAngle angleData, Quaternion quaternion, SpeedWayData speedWayData) {
+    public void updateLabel(FixedAngle angleData, Quaternion quaternion, SpeedWayData speedWayData, ECompass eCompass) {
         System.out.println("updateLabel called.");
         DecimalFormat format = new DecimalFormat("#.####");
         rollLabel.setText(format.format(angleData.getPhi()));
@@ -248,6 +246,9 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         wayXLabel.setText(format.format(speedWayData.getWayX()));
         wayYLabel.setText(format.format(speedWayData.getWayY()));
         wayZLabel.setText(format.format(speedWayData.getWayZ()));
+
+        compass.setText(format.format(eCompass.getCompass()*180/Math.PI));
+
         updateStatus();
     }
 }
