@@ -9,6 +9,7 @@ public class QuaternionClass {
     private double yaw_rad;      //z
     private double[][] DCM = new double[3][3];
     private Quaternion quaternion;
+    private Quaternion oldQuaternion = new Quaternion(1,0,0,0);
     private FixedAngle angleData;
 
     public QuaternionClass() {
@@ -19,8 +20,9 @@ public class QuaternionClass {
         convertToRad(gyroData);
         computeQuaternion();
         // TODO: multiply old with new quaternion here
-        computeAngle(quaternion);
-        computeDCM();
+        oldQuaternion = multiplyQuaternion(oldQuaternion, quaternion);
+        computeAngle(oldQuaternion);
+        computeDCM(oldQuaternion);
         System.out.println("fillDcm");
     }
 
@@ -48,7 +50,6 @@ public class QuaternionClass {
             q2: qy
             q3: qz
          */
-
 
         Double q0 = (Math.cos(roll_rad / 2) * Math.cos(pitch_rad / 2) * Math.cos(yaw_rad / 2) + Math.sin(roll_rad / 2) * Math.sin(pitch_rad / 2) * Math.sin(yaw_rad / 2));
         Double q1 = (Math.sin(roll_rad / 2) * Math.cos(pitch_rad / 2) * Math.cos(yaw_rad / 2) - Math.cos(roll_rad / 2) * Math.sin(pitch_rad / 2) * Math.sin(yaw_rad / 2));
@@ -90,7 +91,7 @@ public class QuaternionClass {
     }
 
 
-    private void computeDCM() {
+    private void computeDCM(Quaternion quaternion) {
         double q1 = quaternion.getQ0();
         double q2 = quaternion.getQ1();
         double q3 = quaternion.getQ2();
