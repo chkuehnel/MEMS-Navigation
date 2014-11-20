@@ -38,7 +38,7 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
 
                 if (eCompass.getCalls() == 0 ) // Initialize eCompass in the beginning
                     eCompass.setCompass(dataSet.getMagData(), dataSet.getGyroData());
-                if (eCompass.getCalls() < 2000 ) // update eCompass in the first readings
+                if (eCompass.getCalls() < 800 ) // update eCompass in the first readings
                     eCompass.updateCompass(dataSet.getMagData(), dataSet.getGyroData());
 
                 quaternionComputer.fillDCM(dataSet.getGyroData());
