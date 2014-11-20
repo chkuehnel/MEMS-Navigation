@@ -33,7 +33,7 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
             dataSet = dataManager.getDataSet();
             if (dataSet != null) {
                 quaternionComputer.fillDCM(dataSet.getGyroData());
-                wayComputer.computeWay(dataSet.getAccData(), quaternionComputer.getAngleData());
+                wayComputer.computeWay(dataSet.getAccData(), quaternionComputer.getAngleData(), quaternionComputer.getDCM());
             }
         }
     }
