@@ -42,7 +42,7 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
                     eCompass.updateCompass(dataSet.getMagData(), dataSet.getGyroData());
 
                 quaternionComputer.fillDCM(dataSet.getGyroData());
-                wayComputer.computeWay(dataSet.getAccData(), quaternionComputer.getAngleData());
+                wayComputer.computeWay(dataSet.getAccData(), quaternionComputer.getAngleData(), quaternionComputer.getDCM());
             }
         }
     }
