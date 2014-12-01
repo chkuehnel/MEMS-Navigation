@@ -7,6 +7,9 @@ import com.haw.navigation.Navigation.*;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -43,6 +46,7 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
     private boolean isRunning = false;
     private final SerialCommunicationManager runnable;
     private SensorDataManager dataManager;
+    private PrintWriter writer;
 
 
     public MEMS_GUI(SensorDataManager dataManager) {
@@ -163,6 +167,7 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
 
     private void stopCommunication() {
         runnable.setAlive(false);
+        writer.close();
     }
 
     private void startCommunication() {
@@ -170,6 +175,7 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         runnable.setAlive(true);
         runnable.setPortName(portName);
         thread.start();
+        makeFile();
         /* //Test code to measure communication cycles per second.
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
@@ -181,6 +187,16 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
                 1000
         );
         */
+    }
+
+    private void makeFile() {
+        try {
+            writer = new PrintWriter("testData.txt", "UTF-8");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -248,6 +264,40 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         wayZLabel.setText(format.format(speedWayData.getWayZ()));
 
         compass.setText(format.format(eCompass.getCompass()*180/Math.PI));
+
+        updateStatus();
+    }
+
+    public void updateLabel(FixedAngle angleData, Quaternion quaternion, SpeedWayData speedWayData, ECompass eCompass, SensorDataSet dataSet) {
+        System.out.println("updateLabel called.");
+        DecimalFormat format = new DecimalFormat("#.####");
+        rollLabel.setText(format.format(angleData.getPhi()));
+        pitchLabel.setText(format.format(angleData.getTheta()));
+        yawLabel.setText(format.format(angleData.getPsi()));
+
+        q1Label.setText(format.format(quaternion.getQ0()));
+        q2Label.setText(format.format(quaternion.getQ1()));
+        q3Label.setText(format.format(quaternion.getQ2()));
+        q4Label.setText(format.format(quaternion.getQ3()));
+
+        vxLabel.setText(format.format(speedWayData.getSpeedX()));
+        vyLabel.setText(format.format(speedWayData.getSpeedY()));
+        vzLabel.setText(format.format(speedWayData.getSpeedZ()));
+
+        wayXLabel.setText(format.format(speedWayData.getWayX()));
+        wayYLabel.setText(format.format(speedWayData.getWayY()));
+        wayZLabel.setText(format.format(speedWayData.getWayZ()));
+
+        compass.setText(format.format(eCompass.getCompass()*180/Math.PI));
+
+        GyroData gyroData = dataSet.getGyroData();
+        AccData accData = dataSet.getAccData();
+        MagData magData = dataSet.getMagData();
+
+        writer.println(gyroData.getxGyroData() + ";" + gyroData.getyGyroData() + ";" +  gyroData.getzGyroData() + ";" +
+                        accData.getxAccData() + ";" +  accData.getyAccData() + ";" +  accData.getzAccData() + ";" +
+                magData.getxMagData() + ";" +  magData.getyMagData() + ";" +  magData.getzMagData());
+        writer.flush();
 
         updateStatus();
     }
