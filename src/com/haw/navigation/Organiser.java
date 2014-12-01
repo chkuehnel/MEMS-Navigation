@@ -51,7 +51,7 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
     public void resultAvailable() {
         System.out.println("resultAvailable called.");
         if (dataSet != null) {
-            gui.updateLabel(quaternionComputer.getAngleData(), quaternionComputer.getQuaternion(), wayComputer.getNewSpeedWay(),eCompass);
+            gui.updateLabel(quaternionComputer.getAngleData(), quaternionComputer.getQuaternion(), wayComputer.getNewSpeedWay(),eCompass, dataSet);
         }
     }
 }
