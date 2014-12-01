@@ -11,13 +11,18 @@ public class QuaternionClass {
     private Quaternion quaternion;
     private Quaternion oldQuaternion = new Quaternion(1,0,0,0);
     private FixedAngle angleData;
+    private GyroData oldGyro = new GyroData(0, 0, 0);
 
     public QuaternionClass() {
         quaternion = new Quaternion();
     }
 
     public void fillDCM(GyroData gyroData) {
-        convertToRad(gyroData);
+        GyroData changeGyro = new GyroData(gyroData.getxGyroData() - oldGyro.getxGyroData(),
+                                            gyroData.getyGyroData() - oldGyro.getyGyroData(),
+                                            gyroData.getzGyroData() - oldGyro.getzGyroData());
+        oldGyro = gyroData;
+        convertToRad(changeGyro);
         computeQuaternion();
         // TODO: multiply old with new quaternion here
         oldQuaternion = multiplyQuaternion(oldQuaternion, quaternion);
@@ -35,7 +40,7 @@ public class QuaternionClass {
     private void computeQuaternion() {
         //  x       y       z
         //  Roll    pitch   yaw
-
+        //  Phi     Theta   Psi
         /* Alternative Formula:
             https://dev.opera.com/articles/w3c-device-orientation-usage/#quaternions
 
@@ -76,7 +81,6 @@ public class QuaternionClass {
                                 q1.getQ3() * q2.getQ0() + q1.getQ0() * q2.getQ3() + q1.getQ1() * q2.getQ2() - q1.getQ2() * q2.getQ1());
     }
 
-
     private void computeAngle(Quaternion quaternion){
         double q0 = quaternion.getQ0();
         double q1 = quaternion.getQ1();
@@ -89,7 +93,6 @@ public class QuaternionClass {
 
         angleData = new FixedAngle(phi, theta, psi);
     }
-
 
     private void computeDCM(Quaternion quaternion) {
         double q1 = quaternion.getQ0();
@@ -113,10 +116,8 @@ public class QuaternionClass {
         DCM[2][2] = (-(q1 * q1) - (q2 * q2) + (q3 * q3) + (q4 * q4));
     }
 
-
-
     public Quaternion getQuaternion() {
-        return quaternion;
+        return oldQuaternion;
     }
 
     public FixedAngle getAngleData() {
