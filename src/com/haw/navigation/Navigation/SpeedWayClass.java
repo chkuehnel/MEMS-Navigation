@@ -5,32 +5,22 @@ package com.haw.navigation.Navigation;
  */
 public class SpeedWayClass {
 
-    private double oldAccX = 0;
-    private double oldAccY = 0;
-    private double oldAccZ = 0;
-    private double oldSpeedX;
-    private double oldSpeedY;
-    private double oldSpeedZ;
-    private long oldTime;
+    private double oldSpeedX = 0;
+    private double oldSpeedY = 0;
+    private double oldSpeedZ = 0;
+    private long oldTime = 0;
 
     private double accX;
     private double accY;
     private double accZ;
-    private FixedAngle angle;
-
-    private SpeedWayData oldSpeedWay;
     private SpeedWayData newSpeedWay;
 
-    private double speedX;
-    private double speedY;
-    private double speedZ;
-
-    private double wayX;
-    private double wayY;
-    private double wayZ;
     private double oldWayX;
     private double oldWayY;
     private double oldWayZ;
+
+    private  double[][] DCM;
+    double[] correctedAcc = new double[3];
 
     private final double g = 9.81;
 
@@ -38,42 +28,54 @@ public class SpeedWayClass {
 
     public SpeedWayClass(ResultAvailableListener listener) {
         this.listener = listener;
-        oldSpeedWay = new SpeedWayData(0, 0, 0, 0, 0, 0);
         newSpeedWay = new SpeedWayData();
+        oldTime = System.nanoTime();
     }
 
-    public void computeWay(AccData accData, FixedAngle angle) {
+    public void computeWay(AccData accData, FixedAngle angle, double[][] DCM) {
+        System.out.println("computeWay called");
         this.accX = accData.getxAccData() * g;
         this.accY = accData.getyAccData() * g;
         this.accZ = accData.getzAccData() * g;
-        this.angle = angle;
+        this.DCM = DCM;
 
- //       correctAccData();
+        correctAccData();
         integrateAcc();
-
         // TODO: transfer this call to speedwayclass
         listener.resultAvailable();
-        System.out.println("computeWay called");
     }
 
     private void integrateAcc() {
-        long delta = System.nanoTime() - oldTime / ((long) Math.pow(10, 9));
+        float divider = (float) Math.pow(10, 9);
+        long newTime = System.nanoTime();
+        float deltaT = newTime - oldTime;
+        float delta = (deltaT) / divider;
 
-        newSpeedWay.setSpeedX(oldSpeedWay.getSpeedX() + (delta * (oldAccX - accX)) / 2);
-        newSpeedWay.setSpeedY(oldSpeedWay.getSpeedY() + (delta * (oldAccY - accY)) / 2);
-        newSpeedWay.setSpeedZ(oldSpeedWay.getSpeedZ() + (delta * (oldAccZ - accZ)) / 2);
+        newSpeedWay.setSpeedX(oldSpeedX + delta*correctedAcc[0]);
+        newSpeedWay.setSpeedY(oldSpeedY + delta*correctedAcc[1]);
+        newSpeedWay.setSpeedZ(oldSpeedZ + delta*correctedAcc[2]);
 
-        newSpeedWay.setWayX(oldSpeedWay.getWayX() + (delta * (oldSpeedWay.getSpeedX() - newSpeedWay.getSpeedX()) / 2));
-        newSpeedWay.setWayY(oldSpeedWay.getWayY() + (delta * (oldSpeedWay.getSpeedY() - newSpeedWay.getSpeedY()) / 2));
-        newSpeedWay.setWayZ(oldSpeedWay.getWayZ() + (delta * (oldSpeedWay.getSpeedZ() - newSpeedWay.getSpeedZ()) / 2));
+        newSpeedWay.setWayX(oldWayX + delta*oldSpeedX);
+        newSpeedWay.setWayY(oldWayY + delta*oldSpeedY);
+        newSpeedWay.setWayZ(oldWayZ + delta*oldSpeedZ);
+
+        oldSpeedX = newSpeedWay.getSpeedX();
+        oldSpeedY = newSpeedWay.getSpeedY();
+        oldSpeedZ = newSpeedWay.getSpeedZ();
+
+        oldWayX = newSpeedWay.getWayX();
+        oldWayY = newSpeedWay.getWayY();
+        oldWayZ = newSpeedWay.getWayZ();
 
         oldTime = System.nanoTime();
     }
 
     public void correctAccData(){
-        accX = accX - angle.getNormPsi() * g;
-        accY = accY - angle.getNormTheta() * g;
-        accZ = accZ - angle.getNormPhi() * g;
+        // TODO: source??
+        correctedAcc[0] = DCM[0][0]*accX + DCM[0][1]*accY + DCM[0][2]*accZ;
+        correctedAcc[1] = DCM[1][0]*accX + DCM[1][1]*accY + DCM[1][2]*accZ;
+        correctedAcc[2] = DCM[2][0]*accX + DCM[2][1]*accY + DCM[2][2]*accZ + g;
+
     }
 
     public interface ResultAvailableListener{
