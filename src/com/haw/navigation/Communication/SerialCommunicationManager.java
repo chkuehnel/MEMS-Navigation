@@ -58,13 +58,14 @@ public class SerialCommunicationManager implements Runnable {
         }
         portStatus = PORT_CONNECTED;
         while (isAlive) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException ignored) {
-                }
-                if (isOutPut) {
-                    sendMessageToPort("TEST\n");
-                }
+            // this is needed, i dont know why, perhaps other threads need more cpu time
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ignored) {
+            }
+            if (isOutPut) {
+                sendMessageToPort("TEST\n");
+            }
         }
         closePort();
         portStatus = PORT_CLOSED;
@@ -177,6 +178,8 @@ public class SerialCommunicationManager implements Runnable {
     }
 
     private class serialPortEventListener implements SerialPortEventListener {
+
+        @Override
         public void serialEvent(SerialPortEvent event) {
             switch (event.getEventType()) {
                 case SerialPortEvent.DATA_AVAILABLE:
