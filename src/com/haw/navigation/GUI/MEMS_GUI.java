@@ -268,28 +268,28 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
         updateStatus();
     }
 
-    public void updateLabel(FixedAngle angleData, Quaternion quaternion, SpeedWayData speedWayData, ECompass eCompass, SensorDataSet dataSet) {
+    public void updateLabel(GyroData angleData, Quaternion quaternion, SpeedWayData speedWayData, ECompass eCompass, SensorDataSet dataSet) {
         System.out.println("updateLabel called.");
         DecimalFormat format = new DecimalFormat("#.####");
-        rollLabel.setText(format.format(angleData.getPhi()));
-        pitchLabel.setText(format.format(angleData.getTheta()));
-        yawLabel.setText(format.format(angleData.getPsi()));
+        rollLabel.setText(format.format(angleData.getxGyroData()));
+        pitchLabel.setText(format.format(angleData.getyGyroData()));
+        yawLabel.setText(format.format(angleData.getzGyroData()));
 
         q1Label.setText(format.format(quaternion.getQ0()));
         q2Label.setText(format.format(quaternion.getQ1()));
         q3Label.setText(format.format(quaternion.getQ2()));
         q4Label.setText(format.format(quaternion.getQ3()));
 
-        vxLabel.setText(format.format(speedWayData.getSpeedX()));
-        vyLabel.setText(format.format(speedWayData.getSpeedY()));
-        vzLabel.setText(format.format(speedWayData.getSpeedZ()));
+        vxLabel.setText(format.format(dataSet.getAccData().getxAccData()));
+        vyLabel.setText(format.format(dataSet.getAccData().getyAccData()));
+        vzLabel.setText(format.format(dataSet.getAccData().getzAccData()));
 
-        wayXLabel.setText(format.format(speedWayData.getWayX()));
-        wayYLabel.setText(format.format(speedWayData.getWayY()));
-        wayZLabel.setText(format.format(speedWayData.getWayZ()));
+        wayXLabel.setText(format.format(dataSet.getMagData().getxMagData()));
+        wayYLabel.setText(format.format(dataSet.getMagData().getyMagData()));
+        wayZLabel.setText(format.format(dataSet.getMagData().getzMagData()));
 
         compass.setText(format.format(eCompass.getCompass()*180/Math.PI));
-
+/*
         GyroData gyroData = dataSet.getGyroData();
         AccData accData = dataSet.getAccData();
         MagData magData = dataSet.getMagData();
@@ -298,7 +298,7 @@ public class MEMS_GUI extends JFrame implements SerialCommunicationManager.Updat
                         accData.getxAccData() + ";" +  accData.getyAccData() + ";" +  accData.getzAccData() + ";" +
                 magData.getxMagData() + ";" +  magData.getyMagData() + ";" +  magData.getzMagData());
         writer.flush();
-
+*/
         updateStatus();
     }
 }
