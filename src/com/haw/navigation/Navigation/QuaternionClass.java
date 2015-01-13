@@ -12,8 +12,10 @@ public class QuaternionClass {
     private Quaternion oldQuaternion = new Quaternion(1,0,0,0);
     private FixedAngle angleData;
     private GyroData oldGyro = new GyroData(0, 0, 0);
+    SpeedWayClass.ResultAvailableListener listener;
 
-    public QuaternionClass() {
+    public QuaternionClass(SpeedWayClass.ResultAvailableListener listener) {
+        this.listener = listener;
         quaternion = new Quaternion();
     }
 
@@ -29,6 +31,8 @@ public class QuaternionClass {
         computeAngle(oldQuaternion);
         computeDCM(oldQuaternion);
         System.out.println("fillDcm");
+
+        listener.resultAvailable();
     }
 
     private void convertToRad(GyroData gyroData) {
