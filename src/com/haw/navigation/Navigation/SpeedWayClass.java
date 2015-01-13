@@ -42,7 +42,6 @@ public class SpeedWayClass {
         correctAccData();
         integrateAcc();
         // TODO: transfer this call to speedwayclass
-        listener.resultAvailable();
     }
 
     private void integrateAcc() {
