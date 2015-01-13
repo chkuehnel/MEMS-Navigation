@@ -23,7 +23,7 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
     public Organiser() {
         dataManager = new SensorDataManager(this);
         dataManager.setListener(this);
-        quaternionComputer = new QuaternionClass();
+        quaternionComputer = new QuaternionClass(this);
         wayComputer = new SpeedWayClass(this);
         eCompass = new ECompass();
         gui = new MEMS_GUI(dataManager);
@@ -42,7 +42,7 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
                     eCompass.updateCompass(dataSet.getMagData(), dataSet.getGyroData());
 
                 quaternionComputer.fillDCM(dataSet.getGyroData());
-                wayComputer.computeWay(dataSet.getAccData(), quaternionComputer.getAngleData(), quaternionComputer.getDCM());
+                //wayComputer.computeWay(dataSet.getAccData(), dataSet.getGyroData(), quaternionComputer.getDCM());
             }
         }
     }
@@ -51,7 +51,7 @@ public class Organiser implements SensorDataManager.DataAvailableListener,
     public void resultAvailable() {
         System.out.println("resultAvailable called.");
         if (dataSet != null) {
-            gui.updateLabel(quaternionComputer.getAngleData(), quaternionComputer.getQuaternion(), wayComputer.getNewSpeedWay(),eCompass, dataSet);
+            gui.updateLabel(dataSet.getGyroData(), quaternionComputer.getQuaternion(), wayComputer.getNewSpeedWay(),eCompass, dataSet);
         }
     }
 }
